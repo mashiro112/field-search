@@ -1,0 +1,4 @@
+interface:
+  display_name: "WeChat Search"
+  short_description: "Search WeChat articles with dates, summaries, and source links"
+  default_prompt: "Use $wechat-search to search WeChat public account articles for this topic."
