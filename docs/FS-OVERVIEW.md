@@ -2,6 +2,8 @@
 
 更新：2026-09-17。此页连接当前源码、历史证据与新科研流程；状态以各层的实际证据范围区分。
 
+接入讨论：[Google Deep Research 路线比较](reviews/GOOGLE-DEEP-RESEARCH-OPTIONS.md)。建议优先复用 Gemini 网页订阅，报告读取可结合 Docs；官方 API 留作按量付费的自动化选项。当前仅文档核查与建议，尚未实施，不能把现有 grounded search 称为已接通 Deep Research。
+
 当前最新：[R25 Bilibili 字幕能力已安装并通过独立验收](reviews/R25-BILIBILI.md)，在已有 video 入口增加 B 站字幕、分 P、时间定位、关键词查找及批量复用。170 文件源码清单、索引与指令合集已同步，会话和完整测试字幕不公开。科研 FS03 状态保持独立。
 
 [R24 已验收能力](reviews/R24-RESULTS.md)包括 YouTube、Discourse、本机运行配置/诊断及任务内批量复用/刷新。R25 在此基础上扩展；最终 B 站正例为来源一致的 1790 段字幕，初版 705/235/267 段错配结果已撤回，不作为验收证据。短链与元数据限制见 R25 结果说明。

@@ -10,6 +10,8 @@ R25 uses an explicitly authorized local QR session when needed; credentials and 
 
 ## Whole-project orientation and history
 
+Next capability under discussion: [Google Deep Research route comparison](docs/reviews/GOOGLE-DEEP-RESEARCH-OPTIONS.md). The recommendation favors the Gemini web product to reuse existing subscription allowance, with optional report export/readback through Docs. The official API is a separately billed automation option; Antigravity CLI research has not been established as the same product route. This is a proposal based on documentation, not an implemented or tested integration.
+
 Start with [FS-OVERVIEW.md](docs/FS-OVERVIEW.md) for the relationship among the current Skill, FS01 evolution, FS02 research design, and FS03. The [history index](docs/history/INDEX.md) contains 28 public copies of historical specifications, experiments, results, reviews, and research comparisons. Historical plans and permissions are records, not current instructions. Read the files relevant to the question and disclose unavailable original evidence.
 
 ## Academic research: current default workflow
