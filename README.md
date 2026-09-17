@@ -27,7 +27,7 @@ Some helpers depend on external runtimes or task-local adapters. The source pres
 
 The original upstream code includes optional collectors beyond the default routes. Their presence does not mean they are authorized, configured, or automatically invoked. In particular, authenticated or paid branches are not made available by this publication.
 
-This is a manual snapshot, not an automatic mirror. To keep conversations aligned, identify the Git commit being read and compare it with the manifest when publishing a later version.
+The owner has requested GitHub updates as part of every substantive FS development checkpoint and handoff. Follow [the development publication rules](AGENTS.md), keep the GPT entrypoint current, and identify the Git commit actually read. This repository contains the latest successfully published checkpoint; it does not mirror unsaved local edits through a background service.
 
 ## Licenses
 

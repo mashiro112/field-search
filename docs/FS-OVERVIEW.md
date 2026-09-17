@@ -27,4 +27,8 @@
 
 > 请读取 mashiro112/field-search 仓库的 CONTEXT_FOR_GPT.md 和 docs/FS-OVERVIEW.md，记录实际读取的 commit。再按需展开历史索引、FS03 三份文档与相关源码，区分已实现/已运行/设计候选/待试跑；科研讨论以 FS03 为当前默认。请先列出实际读到的文件和无法访问的部分，再与我讨论。
 
-GitHub 保存已发布版本；本地后续改动需要再次发布。ChatGPT 按需检索授权仓库，不会因 push 自动更新所有旧对话。[OpenAI GitHub 说明](https://help.openai.com/en/articles/11145903-connecting-github-to-chatgpt)
+用户已确定后续 FS 开发以 GitHub 同步为交付步骤：每次实质进展、交接或本轮结束时更新相关源码、文档、验证及未完成状态，并核对远端版本。具体见 [开发发布规则](../AGENTS.md)。GitHub 保存最新成功发布的阶段；ChatGPT 按需读取，不会因 push 自动更新所有旧对话。[OpenAI GitHub 说明](https://help.openai.com/en/articles/11145903-connecting-github-to-chatgpt)
+
+FS03 本次建项、SOP/模板固定与资料发布已结束，讨论结论保留于本仓库。科研流程仍为规格完成、待真实任务试跑；后续从真实研究问题与用途开始，不因对话归档变成已运行验证。
+
+[FS03 closure summary / 对话归档摘要](academic-evidence-to-writing/CLOSURE-SUMMARY.md) preserves the decisions, artifacts, and next step.
