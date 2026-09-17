@@ -351,6 +351,23 @@ def _youtube_doctor(config):
     return result
 
 
+def _bilibili_doctor(config):
+    paths = runtime_config.reader_paths(config, 'bilibili')
+    session_path = paths.get('session_path')
+    route_file = (Path(__file__).with_name('bilibili.py')).is_file()
+    return {
+        'route_file': route_file,
+        'runtime_ready': route_file,
+        'provider': 'Bilibili official subtitle API + Protobuf endpoint',
+        'protocol_probe': False,
+        'session_path': _path_check(session_path),
+        'media_probe': False,
+        'network_probed': False,
+        'browser_cookies_used': False,
+        'note': 'Local route check only; QR session is optional and browser cookie stores are never read',
+    }
+
+
 def _discourse_doctor():
     return {'route_file': (Path(__file__).with_name('discourse.py')).is_file(),
             'network_probed': False,
@@ -417,10 +434,12 @@ def doctor(config_path=None, source='all', probe_session=False):
     config_result = runtime_config.load_config(config_path)
     config = config_result.get('data') or {}
     targeted = {}
-    selected = ('youtube', 'discourse', 'xiaohongshu', 'batch') if source == 'all' else (source,)
+    selected = ('youtube', 'bilibili', 'discourse', 'xiaohongshu', 'batch') if source == 'all' else (source,)
     for name in selected:
         if name == 'youtube':
             targeted[name] = _youtube_doctor(config)
+        elif name == 'bilibili':
+            targeted[name] = _bilibili_doctor(config)
         elif name == 'discourse':
             targeted[name] = _discourse_doctor()
         elif name == 'xiaohongshu':
@@ -521,7 +540,7 @@ def main(argv=None):
     parser.add_argument('--cursor', help='X next_cursor from a previous result')
     parser.add_argument('--out', help='New JSON file; existing files are never overwritten')
     parser.add_argument('--config', help='Local non-secret runtime config JSON for targeted doctor')
-    parser.add_argument('--source', choices=('all', 'youtube', 'discourse', 'xiaohongshu', 'batch'), default='all',
+    parser.add_argument('--source', choices=('all', 'youtube', 'bilibili', 'discourse', 'xiaohongshu', 'batch'), default='all',
                         help='Targeted doctor route; no network probe unless explicitly requested')
     parser.add_argument('--probe-session', action='store_true',
                         help='Explicitly probe the configured Xiaohongshu read-only session')

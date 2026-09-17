@@ -81,7 +81,7 @@ def _validate(data: Any) -> dict[str, Any]:
                     raise ConfigError("reader_entry_must_be_object")
                 for nested_key, nested_value in value.items():
                     _check_key(nested_key, f"reader_{key}_key")
-                    if nested_key not in {"session_root", "adapter_path", "python_path"}:
+                    if nested_key not in {"session_root", "adapter_path", "python_path", "session_path"}:
                         raise ConfigError("reader_entry_contains_unsupported_field")
                     _validate_string(nested_value, f"reader_{key}_{nested_key}")
     return data

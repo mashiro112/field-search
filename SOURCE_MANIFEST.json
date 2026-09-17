@@ -1,7 +1,7 @@
 {
   "snapshot_date": "2026-09-17",
   "description": "Exact installed source snapshot; caches and runtime artifacts excluded.",
-  "file_count": 168,
+  "file_count": 170,
   "files": [
     {
       "path": "agents/openai.yaml",
@@ -750,18 +750,23 @@
     },
     {
       "path": "references/integration-map.md",
-      "bytes": 8044,
-      "sha256": "f4c710eb8319d27de030c2a8b0c5abdbebfbe70afd22b121b11cb667caa0ac1d"
+      "bytes": 9033,
+      "sha256": "cfdb468b30f64781c7d39eaf81baef9662f31ff95ce467d277bb82c12762ca67"
     },
     {
       "path": "references/providers.md",
-      "bytes": 21128,
-      "sha256": "67631e7f2cb06f6ddf860542d169c9a649f0cb31c465f168657884f77ab45152"
+      "bytes": 21349,
+      "sha256": "6d84acaf52c1d7abfc879d3667dfb0ee91895a69ca9d7219005a179bdb7a0071"
     },
     {
       "path": "references/r24-routes.md",
       "bytes": 5924,
       "sha256": "976d0950a8124831c4acecb6598d27fdd0900533aee2c3519595e294926da9d4"
+    },
+    {
+      "path": "references/r25-routes.md",
+      "bytes": 4196,
+      "sha256": "815597590853932cf7cbe7dbb4ced197d27758bc5f540adcb6d593153d7e95ad"
     },
     {
       "path": "references/source-recipes.md",
@@ -780,8 +785,13 @@
     },
     {
       "path": "scripts/batch.py",
-      "bytes": 13571,
-      "sha256": "85435cc59e7aa955b776440b3abac20148f812eb2994271725c9b740f84b9698"
+      "bytes": 13587,
+      "sha256": "4ae6525f54518627f78f170ecaaa73268c0d5e5e581ca1de8d8de372537ef010"
+    },
+    {
+      "path": "scripts/bilibili.py",
+      "bytes": 31550,
+      "sha256": "a4de5e9c4d01cac5ca2ffed1480dce66140248ff419a04e42569d04f13d96e7d"
     },
     {
       "path": "scripts/crawl4ai_reader.py",
@@ -810,13 +820,13 @@
     },
     {
       "path": "scripts/runtime_config.py",
-      "bytes": 5512,
-      "sha256": "77f1737e21657d9f7b45b410e398a676eb613b6e0b3848ee62ca00a9285dd26f"
+      "bytes": 5528,
+      "sha256": "363f8562cdbe70dc5de3efbe7ff783a4250fded7ae975eb00a34ee2789385195"
     },
     {
       "path": "scripts/search.py",
-      "bytes": 32253,
-      "sha256": "2a8d38e89088f6ba2f51a0f7b39aa7b1010d78b3827d0e8ea9e8e446f87bc5a3"
+      "bytes": 33027,
+      "sha256": "dbf178d4d27cb696732040a63241f4a5255c2379f0546988e61ba6c597c0c5fb"
     },
     {
       "path": "scripts/video_worker.py",
@@ -825,8 +835,8 @@
     },
     {
       "path": "scripts/video.py",
-      "bytes": 9500,
-      "sha256": "c43e2b29bf32fcb776a7d47374fffd1d015342e09f09988c05f98d28697fd5d4"
+      "bytes": 10471,
+      "sha256": "b936ee62668ce78a747f47e22ab5f78e2fff0859c38d61d947edb902a34d8ccd"
     },
     {
       "path": "scripts/xiaohongshu.py",
@@ -835,8 +845,8 @@
     },
     {
       "path": "SKILL.md",
-      "bytes": 17777,
-      "sha256": "f1463331b8d2b2a32012f1107244a9d821f24d53a682bbf42692abe338f97b52"
+      "bytes": 18146,
+      "sha256": "abfd438422b1eeef078b68ab53ae7bf38b6a4da5b03114f0bf6f1405c967214e"
     },
     {
       "path": "THIRD_PARTY_NOTICES/Crawl4AI-LICENSE.txt",

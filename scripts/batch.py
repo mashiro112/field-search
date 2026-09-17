@@ -41,7 +41,7 @@ ALLOWED_ENV = {
 }
 KIND_OPTIONS = {
     "read": {"reader", "wait_css", "wait_timeout", "include_links", "limit", "page", "timeout", "sort", "since"},
-    "video": {"language", "subtitle_type", "find", "max_segments", "timeout", "config", "python_path"},
+    "video": {"language", "subtitle_type", "find", "max_segments", "timeout", "config", "python_path", "session_path"},
     "discourse": {"post_limit", "request_budget", "batch_size", "timeout"},
 }
 

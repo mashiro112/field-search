@@ -167,9 +167,12 @@ python <skill-dir>/scripts/search.py batch create <items.json> --out <new-manife
 python <skill-dir>/scripts/search.py batch run <manifest.json> --out <new-result.json>
 ```
 
-`video` uses only the configured isolated `youtube-transcript-api` runtime and
-returns caption segments with timestamps; no media download, ASR, cookies or
-paid fallback. `discourse` follows public `post_stream.stream` IDs in bounded
+For YouTube, `video` uses the configured isolated `youtube-transcript-api`
+runtime without cookies. Bilibili URL/BV/AV inputs use the standard-library
+adapter and an explicitly authorized local QR session when needed; see
+[r25-routes.md](r25-routes.md) for page selection, configuration and limits.
+Both return caption segments with timestamps, without media downloads, ASR
+or paid fallback. `discourse` follows public `post_stream.stream` IDs in bounded
 post batches rather than assuming the first topic response is complete.
 `doctor` separates path/runtime checks from the explicit XHS session probe.
 `batch` is task-local: successful same-key items reuse their stored output,

@@ -195,6 +195,11 @@ For iterative improvement, freeze the previous version before comparing, separat
 - `scripts/batch.py`: task-local manifest runner for existing `read`, `video` and `discourse` routes. Request keys include per-item kind/target/options; successful same-key results reuse, failed/partial results retry, and `--refresh`/`--refresh-id` force explicit reads. It does not create a global index or framework.
 - `references/r24-routes.md` documents arguments, schemas, limits and portable configuration examples. Actual machine paths and session contents remain outside the Skill and public evidence.
 
+# R25 Bilibili captions (2026-09-17)
+
+- `scripts/bilibili.py`, selected through the existing `video` entry, reads timestamped Bilibili captions, individual video parts and text matches, and works with task-local batch reuse. It uses Python's standard library and Bilibili's web subtitle endpoints. The request/protocol shape is adapted from the [Bilibili AI subtitle extractor](https://github.com/ccBilly-aipm/bilibili-ai-subtitle); its browser-cookie extraction is not adopted and the upstream package is not a runtime dependency. No yt-dlp dependency, media download, ASR or playlist crawl is added.
+- An explicitly authorized QR session is referenced by a local config path; credentials are sent only to the fixed Bilibili API host, never to the caption CDN. See [r25-routes.md](r25-routes.md) for full URL/BV/AV inputs, default P1, short-link limits, failures and bounded output. Validation covers selected real samples and local counterexamples, not universal subtitle availability.
+
 
 ---
 ## File: references/providers.md
@@ -368,9 +373,12 @@ python <skill-dir>/scripts/search.py batch create <items.json> --out <new-manife
 python <skill-dir>/scripts/search.py batch run <manifest.json> --out <new-result.json>
 ```
 
-`video` uses only the configured isolated `youtube-transcript-api` runtime and
-returns caption segments with timestamps; no media download, ASR, cookies or
-paid fallback. `discourse` follows public `post_stream.stream` IDs in bounded
+For YouTube, `video` uses the configured isolated `youtube-transcript-api`
+runtime without cookies. Bilibili URL/BV/AV inputs use the standard-library
+adapter and an explicitly authorized local QR session when needed; see
+[r25-routes.md](r25-routes.md) for page selection, configuration and limits.
+Both return caption segments with timestamps, without media downloads, ASR
+or paid fallback. `discourse` follows public `post_stream.stream` IDs in bounded
 post batches rather than assuming the first topic response is complete.
 `doctor` separates path/runtime checks from the explicit XHS session probe.
 `batch` is task-local: successful same-key items reuse their stored output,
@@ -510,6 +518,100 @@ share mutable parameters between items or create a global index.
 
 
 ---
+## File: references/r25-routes.md
+
+# R25 Bilibili subtitle route
+
+This is an explicit `video` route. It is selected only when the positional
+argument is a Bilibili video URL or a BV/AV identifier; YouTube behavior is
+unchanged.
+
+```text
+<python> <skill-dir>/scripts/search.py video \
+  "https://www.bilibili.com/video/BVxxxxxxxxxx" \
+  --config <local-config.json> --language ai-zh --subtitle-type auto \
+  --find "term" --out <new-result.json>
+```
+
+The adapter reads metadata from Bilibili's public metadata endpoint, then
+uses the authorized legacy WBI subtitle endpoint and the official web
+subtitle Protobuf endpoint. The legacy request uses the exact video Referer;
+the modern request uses `preferred_language=ai-zh` for the Chinese AI track.
+The signed subtitle URL is fetched without forwarding login cookies. The
+implementation is metadata/caption-only: it does not download media,
+danmaku, playlists, or run ASR. The protocol shape follows the current
+[Bilibili AI subtitle extractor](https://github.com/ccBilly-aipm/bilibili-ai-subtitle/blob/main/src/bilibili_ai_subtitle/extractor.py)
+and its [web-subtitle Protobuf parser](https://github.com/ccBilly-aipm/bilibili-ai-subtitle/blob/main/src/bilibili_ai_subtitle/protobuf.py);
+the browser-cookie code in that project is not used here.
+
+## Input and output
+
+Normal Bilibili video URLs are canonicalized to the video path. Only `p` is
+retained from the query. A multi-part URL without `p` reads page 1 and sets
+`page_defaulted_to_first=true`; an explicit `?p=N` is preserved and resolved
+to that page's CID. Bilibili `b23.tv` short links are not followed: they return
+`short_link_requires_verified_resolution` until a verified canonical URL is
+provided.
+
+Each caption record contains `index`, `start_seconds`,
+`duration_seconds`, `end_seconds`, and `text`. The result also preserves
+`aid`, `cid`, `duration_seconds`, selected language/type, `available_subtitles`,
+and a non-secret `selected_subtitle` identity: provider route, public track ID
+when supplied, CDN host, query-key names, and a hash of the URL path. Signed
+query values are never emitted.
+
+With `--out`, the complete bounded result is saved to a new file and stdout
+contains only a small preview with up to five matches. Existing output files
+are never overwritten. `--max-segments` caps the returned records; a caption
+whose final timestamp is materially earlier than the video duration is also
+marked `partial` with `partial_reason=caption_ends_before_video`.
+
+## Session and failure semantics
+
+The optional local config stores only a session-file path:
+
+```json
+{
+  "schema_version": 1,
+  "runtimes": {
+    "youtube_transcript_python": "C:/path/to/youtube-runtime/Scripts/python.exe"
+  },
+  "readers": {
+    "bilibili": {
+      "session_path": "C:/path/to/qr-session.json"
+    }
+  }
+}
+```
+
+The session must come from an explicit Bilibili QR login flow. The adapter
+does not read browser profiles or browser-cookie stores, and only sends the
+selected Bilibili session cookies to `api.bilibili.com`. Do not put cookie
+values, QR URLs, or session contents into the config file or evidence notes.
+
+Important unavailable reasons remain distinct: `login_required` means the
+metadata endpoint says the subtitle needs authorization; `no_subtitles` means
+the selected page returned no subtitle tracks without that login signal;
+`access_blocked` covers HTTP access/risk responses; `network_error_or_timeout`
+and `protobuf_invalid` preserve transport/protocol failures; and
+`video_metadata_unavailable`/`bilibili_page_not_found` preserve missing or
+invalid video/page metadata. An empty subtitle body is
+`subtitle_empty`, not automatically `no_subtitles`.
+
+`search.py doctor --source bilibili` performs only a local route/config check;
+it does not contact Bilibili or read the session file.
+
+## Batch use
+
+`batch` accepts Bilibili items as `kind=video` using the same `language`,
+`subtitle_type`, `find`, `max_segments`, `timeout`, `config`, and
+`session_path` options. Request keys include the item kind, target, options,
+and config fingerprint, so successful Bilibili results can be reused while
+unavailable/error results are retried. YouTube items remain isolated from the
+Bilibili session and provider parameters.
+
+
+---
 ## File: references/source-recipes.md
 
 # Task-specific search routes
@@ -601,7 +703,7 @@ Choose and state the unresolved condition that justifies a deeper route before e
   ~~~
 
   Search accepts a returned-result limit of 1..5. Feed accepts only an opaque `r22:` reference; no access token or URL token is accepted. `--max-comments` is a comment-loading target of 1..3, not a hard returned-item limit. Preserve the adapter's actual returned count, `has_more`, unknown and truncation fields. This route does not expose login, cookies, QR data, session paths, downloads or an output-file writer.
-- **Explicit R24 material routes:** Use `scripts/search.py video <YouTube URL-or-ID>` for caption-only, timestamped reading through the configured isolated `youtube-transcript-api` runtime; use `scripts/search.py discourse <public Discourse topic URL>` for bounded topic/post JSON reading. Neither route downloads media, logs in, reads cookies, or silently falls back to ASR/paid services. Use `search.py doctor --source ...` for targeted local/runtime checks; `--probe-session` is an explicit Xiaohongshu read-only probe and path existence is not authorization. Use `search.py batch create/run/status` only for a small task-local manifest when successful results should be reused and failed items retried. Read [references/r24-routes.md](references/r24-routes.md) for arguments, schemas and limits.
+- **Explicit R24/R25 material routes:** Use `scripts/search.py video <YouTube URL-or-ID>` for caption-only, timestamped reading through the configured isolated `youtube-transcript-api` runtime; use the same command with a Bilibili URL/BV ID for the official Bilibili metadata/legacy-WBI and Protobuf subtitle APIs. Use `scripts/search.py discourse <public Discourse topic URL>` for bounded topic/post JSON reading. Neither route downloads media, logs in, reads browser cookies, or silently falls back to ASR/paid services. The Bilibili route accepts only an explicit QR-session JSON reference, sends that session only to `api.bilibili.com`, and never forwards login cookies to the signed subtitle CDN. Use `search.py doctor --source ...` for targeted local/runtime checks; `--probe-session` is an explicit Xiaohongshu read-only probe and path existence is not authorization. Use `search.py batch create/run/status` only for a small task-local manifest when successful results should be reused and failed items retried. Read [references/r24-routes.md](references/r24-routes.md) and [references/r25-routes.md](references/r25-routes.md) for arguments, schemas and limits.
 - **Recent community investigation:** `scripts/search.py recent` delegates to the pinned last30days keyless engine with a caller-authored plan and explicit cutoff date. Inspect its full source records and nested failures, then read originals and synthesize; the printed top clusters can omit decisive low-engagement issues.
 - **Long originals:** `scripts/search.py read` on general public pages uses websearch's extraction and lossless pagination through the existing public Jina route. Extraction completeness still needs human/model judgment; the saved raw response remains available for comparison. `scripts/search.py document find/open` reuses the snapshot offline.
 

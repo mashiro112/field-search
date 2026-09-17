@@ -1,4 +1,4 @@
-"""Explicit YouTube caption retrieval with timestamp search.
+"""Explicit caption retrieval for YouTube and Bilibili with timestamp search.
 
 This is a thin bridge to an isolated youtube-transcript-api runtime.  The
 route deliberately does not download media, use cookies, invoke ASR, or
@@ -66,20 +66,24 @@ def parse_video_ref(value: str) -> tuple[str, str]:
     return candidate, f"https://www.youtube.com/watch?v={candidate}"
 
 
-def _error(reason: str, *, failure: str | None = None) -> dict[str, Any]:
+def _error(reason: str, *, failure: str | None = None, source: str = "youtube") -> dict[str, Any]:
+    is_bilibili = source == "bilibili"
     result: dict[str, Any] = {
         "status": "unavailable",
         "records": [],
         "reason": reason,
-        "scope": "captions_only; no_media_download; no_asr",
+        "scope": "captions_only; no_media_download; no_asr; no_danmaku" if is_bilibili else "captions_only; no_media_download; no_asr",
         "integration": {
             "route": "field-search video",
-            "provider": "youtube-transcript-api",
-            "runtime": "isolated configured Python path",
+            "provider": "Bilibili official subtitle API" if is_bilibili else "youtube-transcript-api",
+            "runtime": "standard-library HTTPS + official subtitle endpoints" if is_bilibili else "isolated configured Python path",
             "media_downloaded": False,
             "asr_used": False,
         },
     }
+    result["source"] = source
+    if is_bilibili:
+        result["integration"].update({"danmaku_downloaded": False, "browser_cookies_used": False})
     if failure:
         result["failure"] = {"kind": failure}
     return result
@@ -170,15 +174,16 @@ def _worker(runtime: Path, payload: dict[str, Any], timeout: float) -> dict[str,
 
 
 def _parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Read public YouTube captions and locate text by timestamp")
-    parser.add_argument("url_or_id", help="YouTube watch/shorts/embed URL or 11-character video ID")
-    parser.add_argument("--language", default="en", help="comma-separated language codes, preferred order")
+    parser = argparse.ArgumentParser(description="Read public YouTube/Bilibili captions and locate text by timestamp")
+    parser.add_argument("url_or_id", help="YouTube/Bilibili URL or video ID")
+    parser.add_argument("--language", default=None, help="comma-separated language codes, preferred order")
     parser.add_argument("--subtitle-type", choices=("any", "manual", "auto"), default="any")
     parser.add_argument("--find", help="case-insensitive text to locate in caption segments")
     parser.add_argument("--max-segments", type=int, default=5000)
     parser.add_argument("--timeout", type=float, default=30.0)
     parser.add_argument("--config", help="local non-secret runtime config JSON")
     parser.add_argument("--python-path", help="explicit isolated Python path; overrides config")
+    parser.add_argument("--session-path", help="explicit local Bilibili QR session JSON; never a browser-cookie path")
     parser.add_argument("--out", help="new JSON output path; existing files are never overwritten")
     return parser
 
@@ -189,12 +194,15 @@ def main(argv: Sequence[str] | None = None) -> int:
         args = parser.parse_args(list(argv) if argv is not None else None)
         if args.out and Path(args.out).exists():
             raise ValueError("--out already exists; choose a new artifact path")
-        video_id, canonical_url = parse_video_ref(args.url_or_id)
-        languages = _languages(args.language)
         if not 1 <= args.max_segments <= 10000:
             parser.error("--max-segments must be between 1 and 10000")
         if not 5 <= args.timeout <= 60:
             parser.error("--timeout must be between 5 and 60")
+        import bilibili
+        if bilibili.parse_video_ref(args.url_or_id) is not None:
+            return bilibili.main(args)
+        video_id, canonical_url = parse_video_ref(args.url_or_id)
+        languages = _languages(args.language or "en")
         config_result = runtime_config.load_config(args.config)
         runtime, reason = _runtime_path(args, config_result)
         if reason:
@@ -223,7 +231,15 @@ def main(argv: Sequence[str] | None = None) -> int:
         _emit(result, args.out)
         return 0 if result.get("status") in {"ok", "partial"} else 2
     except ValueError as exc:
-        result = _error(str(exc), failure="invalid_argument")
+        source = "youtube"
+        try:
+            if "args" in locals():
+                import bilibili
+                if bilibili.parse_video_ref(args.url_or_id) is not None:
+                    source = "bilibili"
+        except (AttributeError, ValueError):
+            pass
+        result = _error(str(exc), failure="invalid_argument", source=source)
         try:
             _emit(result, getattr(locals().get("args"), "out", None))
         except ValueError:
