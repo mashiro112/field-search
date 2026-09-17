@@ -1,0 +1,808 @@
+{
+  "schema": "fs02-r2-capability-matrix-code.v1",
+  "generated_at": "2026-09-15",
+  "scope": "仅代码层；每行只代表固定 commit/共享脚本中已审节点集合，不代表完整项目能力；源码已读不等于安装、完整运行或真实科研效果验证。",
+  "value_encoding": {
+    "0": "已审代码范围明确没有该维度",
+    "1": "已审代码明确实现该维度",
+    "?": "当前已审范围不足，不能推断"
+  },
+  "dimension_order": [
+    "query_reformulation",
+    "query_syntax_compilation",
+    "multi_source_academic_discovery",
+    "domain_filtering",
+    "identifier_normalization",
+    "citation_expansion",
+    "oa_resolution",
+    "evidence_anchor",
+    "in_fulltext_search",
+    "record_dedup",
+    "research_version_relations",
+    "ranking_screening",
+    "evidence_provenance",
+    "iterative_stop",
+    "reusable_interface"
+  ],
+  "dimensions": [
+    {
+      "id": "query_reformulation",
+      "description": "代码生成、改写、释义或扩展多个检索查询；仅清洗输入不计。"
+    },
+    {
+      "id": "query_syntax_compilation",
+      "description": "代码把通用查询/AST编译为平台特定检索语法；仅调度不计。"
+    },
+    {
+      "id": "multi_source_academic_discovery",
+      "description": "已审代码实际调用至少两个学术索引、仓储或馆藏取得候选；同源wrapper不计。"
+    },
+    {
+      "id": "domain_filtering",
+      "description": "已审代码按学科、主题、venue、机构、语言等领域条件过滤；年份 alone 不计。"
+    },
+    {
+      "id": "identifier_normalization",
+      "description": "已审代码规范 DOI、PMID、arXiv 等标识并用于匹配/保留。"
+    },
+    {
+      "id": "citation_expansion",
+      "description": "已审代码沿 references、citations、co-citation 或 snowball 关系产生候选。"
+    },
+    {
+      "id": "oa_resolution",
+      "description": "已审代码从记录/标识解析到 OA/全文 URL 或文件；仅 OA flag、已给 URL 或下载校验不计。"
+    },
+    {
+      "id": "evidence_anchor",
+      "description": "已审代码保留页、section、bbox、字符 offset 或引文上下文等可复查定位；无位置的文本不计。"
+    },
+    {
+      "id": "in_fulltext_search",
+      "description": "已审代码在已取得的全文或文档 corpus 内检索。"
+    },
+    {
+      "id": "record_dedup",
+      "description": "已审代码对书目记录去重、聚类或合并。"
+    },
+    {
+      "id": "research_version_relations",
+      "description": "已审代码显式链接研究、版本、补充、派生、数据、软件、撤稿等产物关系；引用边单独计 citation_expansion。"
+    },
+    {
+      "id": "ranking_screening",
+      "description": "已审代码按相关性/分数排序或以标签、active learning 做筛选。"
+    },
+    {
+      "id": "evidence_provenance",
+      "description": "已审代码把 source、query、revision、条件、错误或位置与输出关联保存。"
+    },
+    {
+      "id": "iterative_stop",
+      "description": "已审代码有跨轮继续/停止、预算、截断或更新规则；单次分页/top_n 不计。"
+    },
+    {
+      "id": "reusable_interface",
+      "description": "已审代码提供有界 CLI、API、MCP 或 library 节点。"
+    }
+  ],
+  "rows": [
+    {
+      "id": "field-search",
+      "name": "当前 field-search（代码基线）",
+      "scope": "共享 Skill 的已审 scripts/search.py、integrated.py、academic_edges.py、document.py；代码-only，未把 Skill 指令/宿主 Sider 合同算入；非完整工程。",
+      "values": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "1",
+        "1",
+        "0",
+        "1",
+        "1",
+        "0",
+        "0",
+        "0",
+        "1",
+        "0",
+        "1"
+      ],
+      "cell_notes": [
+        "ref:BASELINE.md §2/search.py；无查询改写",
+        "ref:BASELINE.md §2；无平台语法编译器",
+        "ref:BASELINE.md §2/academic_edges.py；仅单一 OpenCitations 边路由",
+        "ref:BASELINE.md §2；无学术领域字段过滤",
+        "ref:BASELINE.md §2/academic_edges.py；显式 DOI 解析",
+        "ref:BASELINE.md §2/academic_edges.py；bounded DOI citation edges",
+        "scope:document.py 接受 URL；无学术 ID→OA resolver",
+        "ref:BASELINE.md §2/document.py；snapshot 文字 offset 可定位，无页/bbox",
+        "ref:BASELINE.md §2/document.py；离线 literal find",
+        "scope:已审脚本无书目记录 dedup",
+        "scope:无版本/补充/派生关系代码",
+        "scope:无科研结果 rank/screen 节点",
+        "ref:BASELINE.md §1-2；来源/查询/条件/错误保留在已审输出路径",
+        "scope:仅单次 page/max budget；无跨轮研究 stop",
+        "ref:BASELINE.md §2；CLI/subcommand 与脚本入口"
+      ],
+      "source_refs": [
+        "output/fs02/r2/BASELINE.md",
+        "installed-field-search/scripts/search.py",
+        "installed-field-search/scripts/integrated.py",
+        "installed-field-search/scripts/academic_edges.py",
+        "installed-field-search/scripts/document.py"
+      ]
+    },
+    {
+      "id": "scientific-agent-skills",
+      "name": "K-Dense Scientific Agent Skills",
+      "scope": "只审 citation-management 的 OpenAlex/PubMed/DOI/validation scripts；固定提交 330c8e7；非完整 skill 集合。",
+      "values": [
+        "0",
+        "0",
+        "1",
+        "?",
+        "1",
+        "0",
+        "0",
+        "0",
+        "0",
+        "1",
+        "0",
+        "1",
+        "?",
+        "0",
+        "1"
+      ],
+      "cell_notes": [
+        "ref:SOURCE-NODES.md#K-Dense；脚本接收 query/filters，不改写",
+        "scope:无通用 AST/平台 compiler",
+        "ref:SOURCE-NODES.md#K-Dense/search_openalex+search_pubmed；两个学术源脚本",
+        "scope:work_type/publication_type 有过滤，但未确认 subject/venue/domain routing",
+        "ref:SOURCE-NODES.md#K-Dense/doi_to_bibtex；清理 DOI URL 前缀",
+        "scope:已审脚本无 references/citations graph",
+        "scope:OpenAlex 仅返回 is_open_access flag；无 URL/file resolver",
+        "scope:返回书目 metadata；无页/section/bbox/offset",
+        "scope:已审脚本无全文获取/内检索",
+        "ref:SOURCE-NODES.md#K-Dense/validate_citations；DOI/key/title duplicate checks",
+        "scope:无研究版本/补充关系",
+        "ref:SOURCE-NODES.md#K-Dense/search_openalex；relevance/citations sort",
+        "scope:记录/打印结果但未见结构化 source/query provenance ledger",
+        "scope:cursor/page loop only；按定义不计跨轮 stop",
+        "ref:固定脚本有 class/CLI main"
+      ],
+      "source_refs": [
+        "output/fs02/r2/SOURCE-NODES.md#K-Dense-AI/scientific-agent-skills",
+        "https://github.com/K-Dense-AI/scientific-agent-skills/blob/330c8e764435a731eff571e3efdda70b363d0792/skills/citation-management/scripts/search_openalex.py#L57-L145",
+        "https://github.com/K-Dense-AI/scientific-agent-skills/blob/330c8e764435a731eff571e3efdda70b363d0792/skills/citation-management/scripts/search_pubmed.py#L27-L117",
+        "https://github.com/K-Dense-AI/scientific-agent-skills/blob/330c8e764435a731eff571e3efdda70b363d0792/skills/citation-management/scripts/doi_to_bibtex.py#L14-L96"
+      ]
+    },
+    {
+      "id": "paper-search-mcp",
+      "name": "openags/paper-search-mcp",
+      "scope": "只审 server.py 的 adapter registry、fan-out、dedup、PDF/OA fallback；固定提交 234678a；未运行。",
+      "values": [
+        "0",
+        "0",
+        "1",
+        "?",
+        "1",
+        "0",
+        "1",
+        "0",
+        "0",
+        "1",
+        "0",
+        "?",
+        "1",
+        "0",
+        "1"
+      ],
+      "cell_notes": [
+        "ref:SOURCE-NODES.md#openags；aggregate search 接收 query",
+        "scope:无通用查询语法 compiler",
+        "ref:SOURCE-NODES.md#openags/server.py L1-L126；20+学术 adapter",
+        "scope:审计路径有时间/source filter，但无一致 subject/venue domain contract",
+        "ref:SOURCE-NODES.md#openags/server.py L137-L162；DOI/title/author/id key",
+        "ref:SOURCE-NODES.md#openags/server.py L242-L354；明确无 citation graph",
+        "ref:SOURCE-NODES.md#openags/server.py L172-L239；PDF checks 与 OA fallback",
+        "scope:PDF下载未审 page/section/bbox anchor",
+        "scope:无取得全文后的检索节点",
+        "ref:SOURCE-NODES.md#openags/server.py L137-L162；合并去重",
+        "scope:未审版本/补充/派生关系",
+        "scope:已审 aggregate path 未确认 rank/screen",
+        "ref:SOURCE-NODES.md#openags；source counts/errors/raw results",
+        "scope:bounded parallel fan-out；无跨轮 research stop",
+        "ref:SOURCE-NODES.md#openags；MCP server"
+      ],
+      "source_refs": [
+        "output/fs02/r2/SOURCE-NODES.md#openags/paper-search-mcp",
+        "https://github.com/openags/paper-search-mcp/blob/234678ab231074a7977320978ee0496dcdaddd1f/paper_search_mcp/server.py#L137-L354"
+      ]
+    },
+    {
+      "id": "scitadel",
+      "name": "vig-os/scitadel",
+      "scope": "只审 orchestrator、dedup、MCP search/citation/BM25 tools；固定提交 1d1d998；未运行。",
+      "values": [
+        "?",
+        "0",
+        "1",
+        "?",
+        "1",
+        "1",
+        "0",
+        "0",
+        "0",
+        "1",
+        "?",
+        "1",
+        "1",
+        "?",
+        "1"
+      ],
+      "cell_notes": [
+        "ref:SOURCE-NODES.md#vig-os；question_id/linked terms 输入，未确认改写",
+        "scope:无平台查询语法 compiler",
+        "ref:SOURCE-NODES.md#vig-os/orchestrator；多 source adapter 并行",
+        "scope:已审节点未确认领域条件过滤",
+        "ref:SOURCE-NODES.md#vig-os/dedup；DOI/title normalization",
+        "ref:SOURCE-NODES.md#vig-os/tools；OpenAlex references/citations",
+        "scope:已审节点无 OA/fulltext resolver",
+        "scope:已审节点无页/section/bbox/citation-context anchor",
+        "scope:已审节点无全文内检索",
+        "ref:SOURCE-NODES.md#vig-os/dedup；DOI/Jaccard canonical Paper",
+        "scope:未审研究版本/补充/派生关系",
+        "ref:SOURCE-NODES.md#vig-os/tools；存储 BM25 search",
+        "ref:SOURCE-NODES.md#vig-os/orchestrator；source outcome/provenance",
+        "scope:有 source limits 但未确认跨轮 research stop",
+        "ref:SOURCE-NODES.md#vig-os；MCP search/citation tools"
+      ],
+      "source_refs": [
+        "output/fs02/r2/SOURCE-NODES.md#vig-os/scitadel",
+        "https://github.com/vig-os/scitadel/blob/1d1d9985b148c66def3ec63db6b551d5589d9d61/crates/scitadel-core/src/services/orchestrator.rs#L78-L123",
+        "https://github.com/vig-os/scitadel/blob/1d1d9985b148c66def3ec63db6b551d5589d9d61/crates/scitadel-mcp/src/tools.rs#L687-L891"
+      ]
+    },
+    {
+      "id": "paper-qa2",
+      "name": "FutureHouse PaperQA2",
+      "scope": "只审本地 Tantivy search/evidence/index paths；固定提交 57e89f7；本节点非外部学术发现，未运行。",
+      "values": [
+        "0",
+        "0",
+        "0",
+        "?",
+        "?",
+        "0",
+        "0",
+        "1",
+        "1",
+        "?",
+        "?",
+        "1",
+        "1",
+        "0",
+        "1"
+      ],
+      "cell_notes": [
+        "ref:SOURCE-NODES.md#PaperQA2/search.py；query cleaning，不生成变体",
+        "scope:无平台语法 compiler",
+        "scope:审计路径是 local directory index，不是多源 discovery",
+        "scope:year/top_n 不证明 domain filtering",
+        "scope:local paper id/metadata，不确认 canonical identifier normalization",
+        "ref:SOURCE-NODES.md#语义边界修正；citation metadata 不等于 citation traversal",
+        "scope:无外部 OA acquisition/resolver",
+        "ref:SOURCE-NODES.md#PaperQA2；MMR evidence/citation context，无页坐标确认",
+        "ref:SOURCE-NODES.md#PaperQA2/docs.py；Tantivy/evidence 内检索",
+        "scope:file hash/index sync 不是书目 record dedup",
+        "scope:未审版本/补充/派生关系",
+        "ref:SOURCE-NODES.md#PaperQA2；top_n/MMR evidence ranking",
+        "ref:SOURCE-NODES.md#PaperQA2；evidence/citation metadata 与文档状态",
+        "scope:重复 query/index sync 非跨轮 research stop",
+        "ref:SOURCE-NODES.md#PaperQA2；Python agent/tool/library path"
+      ],
+      "source_refs": [
+        "output/fs02/r2/SOURCE-NODES.md#future-house/paper-qa",
+        "output/fs02/r2/SOURCE-NODES.md#语义边界修正",
+        "https://github.com/Future-House/paper-qa/blob/57e89f7223b0960d5ee5ea048c69e3c47e088572/src/paperqa/agents/search.py#L399-L575",
+        "https://github.com/Future-House/paper-qa/blob/57e89f7223b0960d5ee5ea048c69e3c47e088572/src/paperqa/docs.py#L456-L570"
+      ]
+    },
+    {
+      "id": "openscholar",
+      "name": "AkariAsai/OpenScholar",
+      "scope": "只审 use_search_apis.py 与 rerank/passage路径；固定提交 0e9b8fb；未运行。",
+      "values": [
+        "1",
+        "0",
+        "1",
+        "1",
+        "1",
+        "0",
+        "1",
+        "0",
+        "1",
+        "1",
+        "?",
+        "1",
+        "?",
+        "0",
+        "1"
+      ],
+      "cell_notes": [
+        "ref:SOURCE-NODES.md#OpenScholar L75-L76；最多生成 5 个 keyword queries",
+        "scope:未审平台语法 compiler",
+        "ref:SOURCE-NODES.md#OpenScholar；S2/PubMed 等检索与 passage sources",
+        "ref:SOURCE-NODES.md#OpenScholar；S2 field/minCitation filters",
+        "ref:SOURCE-NODES.md#OpenScholar；paperId 去重键",
+        "ref:SOURCE-NODES.md#OpenScholar；citation sort，不是 traversal",
+        "ref:SOURCE-NODES.md#OpenScholar；ar5iv/PubMed/PES2O passage lookup",
+        "scope:passage 无稳定 page/section/offset anchor",
+        "ref:SOURCE-NODES.md#OpenScholar；passage/fulltext retrieval",
+        "ref:SOURCE-NODES.md#OpenScholar；paperId dedup",
+        "scope:未审 preprint/formal/derived relation",
+        "ref:SOURCE-NODES.md#OpenScholar；citation/BGE rerank",
+        "scope:返回 metadata/passages/errors，未确认持久 provenance ledger",
+        "scope:最多 5 路 query fan-out，不是跨轮 stop",
+        "ref:固定 Python search/rerank functions"
+      ],
+      "source_refs": [
+        "output/fs02/r2/SOURCE-NODES.md#AkariAsai/OpenScholar",
+        "https://github.com/AkariAsai/OpenScholar/blob/0e9b8fb912273d3dae39e593da86e4f6d3bf8de1/src/use_search_apis.py#L96-L172",
+        "https://github.com/AkariAsai/OpenScholar/blob/0e9b8fb912273d3dae39e593da86e4f6d3bf8de1/src/open_scholar.py#L40-L170"
+      ]
+    },
+    {
+      "id": "paper-finder",
+      "name": "AllenAI Paper Finder",
+      "scope": "只审 query analyzer、broad keyword 与 citing-paper agents；固定提交 0623cce；未运行，非完整系统。",
+      "values": [
+        "1",
+        "0",
+        "?",
+        "1",
+        "?",
+        "1",
+        "0",
+        "0",
+        "0",
+        "?",
+        "?",
+        "1",
+        "?",
+        "?",
+        "?"
+      ],
+      "cell_notes": [
+        "ref:SOURCE-NODES.md#Paper Finder；LLM keyword query generation",
+        "scope:审计路径无 generic→platform syntax compiler",
+        "scope:S2 与 citing-paper route，同源/多源覆盖未确证",
+        "ref:SOURCE-NODES.md#Paper Finder；year/venue/fields-of-study filters",
+        "scope:审计片段未确证 canonical DOI/ID normalization",
+        "ref:SOURCE-NODES.md#Paper Finder；citing-paper agent 生成候选",
+        "scope:审计 agents 无 OA/fulltext resolver",
+        "scope:snippet 无 page/section/bbox/offset",
+        "scope:审计 agents 无全文内检索",
+        "scope:审计 agents 未见 record dedup",
+        "scope:未审版本/补充/派生关系",
+        "ref:SOURCE-NODES.md#Paper Finder；relevance/Cohere rerank",
+        "scope:snippet/score 有输出，未见 provenance ledger",
+        "scope:fast/diligent 线索未在此节点确证跨轮 stop",
+        "scope:agent functions 可读，但公开有界接口未在审计片段确证"
+      ],
+      "source_refs": [
+        "output/fs02/r2/SOURCE-NODES.md#Paper-Finder",
+        "output/fs02/r2/SOURCE-AUDIT.md#Paper-Finder",
+        "https://github.com/allenai/asta-paper-finder/blob/0623cce6ff61b0a1a637c78d352c4f4d431d0364/agents/mabool/api/mabool/agents/query_analyzer/query_analyzer.py#L118-L211",
+        "https://github.com/allenai/asta-paper-finder/blob/0623cce6ff61b0a1a637c78d352c4f4d431d0364/agents/mabool/api/mabool/agents/by_citing_papers/broad_by_specific_paper_citation_agent.py#L39-L202"
+      ]
+    },
+    {
+      "id": "academic-search",
+      "name": "ustc-ai4science/academic-search",
+      "scope": "只审固定提交的 record/OA scripts 及对应 Skill 路由；代码-only 向量不把 Skill 指令当源码；固定提交 b9b692e。",
+      "values": [
+        "?",
+        "0",
+        "0",
+        "?",
+        "1",
+        "0",
+        "0",
+        "0",
+        "0",
+        "1",
+        "1",
+        "?",
+        "1",
+        "?",
+        "1"
+      ],
+      "cell_notes": [
+        "scope:路由在 Skill 指令，审计脚本未确证 query rewrite",
+        "ref:TRADITIONAL-NODES.md#L28-L35；无独立 query translator",
+        "ref:TRADITIONAL-NODES.md#L33-L35；source tree 无 HTTP academic adapters",
+        "scope:学科路由为指令层，代码节点未确证 field/domain filter",
+        "ref:TRADITIONAL-NODES.md#L33；academic-records 规范 DOI/arXiv/PMID",
+        "scope:代码节点未确证 citation graph expansion",
+        "scope:oa-pdf-download 接受/校验 URL，不从 ID 解析 OA location",
+        "scope:下载/记录代码未确证页/section/bbox anchor",
+        "scope:未确证全文 corpus 内检索",
+        "ref:TRADITIONAL-NODES.md#L33；dedupeRecords/possible duplicate",
+        "ref:TRADITIONAL-NODES.md#L33；版本/冲突/来源索引记录",
+        "scope:人工 include/exclude/maybe 审计，未确证代码排序器",
+        "ref:TRADITIONAL-NODES.md#L33；citation sources/field_sources/provenance",
+        "scope:dry-run/audit 不是已确证跨轮 stop",
+        "ref:TRADITIONAL-NODES.md#L32-L35；academic-records/OA scripts"
+      ],
+      "source_refs": [
+        "output/fs02/r2/TRADITIONAL-NODES.md#L28-L35",
+        "https://github.com/ustc-ai4science/academic-search/blob/b9b692ed1334c858eb42d1f2710ccfcae1a43eb8/scripts/academic-records.mjs",
+        "https://github.com/ustc-ai4science/academic-search/blob/b9b692ed1334c858eb42d1f2710ccfcae1a43eb8/scripts/oa-pdf-download.mjs"
+      ]
+    },
+    {
+      "id": "findpapers",
+      "name": "jonatasgrosman/findpapers",
+      "scope": "只审 query AST/normalizer/propagator/builders/runner 的固定提交 3b42b66；未运行。",
+      "values": [
+        "0",
+        "1",
+        "1",
+        "1",
+        "1",
+        "?",
+        "0",
+        "0",
+        "0",
+        "1",
+        "?",
+        "?",
+        "?",
+        "0",
+        "1"
+      ],
+      "cell_notes": [
+        "ref:TRADITIONAL-NODES.md#L37-L44；normalization，不是 query expansion",
+        "ref:TRADITIONAL-NODES.md#L41-L43；platform builders 编译语法",
+        "ref:TRADITIONAL-NODES.md#L41-L43；arXiv/IEEE/OpenAlex/PubMed/Scopus/S2/WoS runners",
+        "ref:TRADITIONAL-NODES.md#L41-L43；字段传播/日期过滤",
+        "ref:TRADITIONAL-NODES.md#L41-L43；DOI/title-year handling",
+        "scope:审计路径未确认 citation/reference graph",
+        "scope:无 OA resolver/fulltext location path",
+        "scope:无 page/section/bbox/citation anchor",
+        "scope:query runner/metadata path 未确证全文内检索",
+        "ref:TRADITIONAL-NODES.md#L41-L43；DOI/title-year dedup",
+        "scope:未确证版本/补充关系",
+        "scope:审计路径有执行计划，未确证 relevance rank/screen",
+        "scope:查询/执行 provenance ledger 未确证",
+        "scope:runner pagination/filters 不计跨轮 stop",
+        "ref:TRADITIONAL-NODES.md#L41-L44；Python package/query runner"
+      ],
+      "source_refs": [
+        "output/fs02/r2/TRADITIONAL-NODES.md#L37-L44",
+        "https://github.com/jonatasgrosman/findpapers/blob/3b42b66befa0a64416258e7481201a0253f09e73/core/query.py"
+      ]
+    },
+    {
+      "id": "search-query",
+      "name": "CoLRev-Environment/search-query",
+      "scope": "只审 fixed commit 的 AST/parser/serializer/translator/linter nodes；它不是 result source；固定提交 f664607。",
+      "values": [
+        "0",
+        "1",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "1"
+      ],
+      "cell_notes": [
+        "ref:TRADITIONAL-NODES.md#L9-L16；parser/AST 不生成改写查询",
+        "ref:TRADITIONAL-NODES.md#L13-L16；generic AST→PubMed/WoS/EBSCO syntax",
+        "scope:translator 不调用学术 result source",
+        "scope:无 metadata/domain filter",
+        "scope:无 DOI/PMID/arXiv normalization",
+        "scope:无 citation graph",
+        "scope:无 OA/fulltext path",
+        "scope:无 evidence location",
+        "scope:无全文检索",
+        "scope:无 record dedup",
+        "scope:无 research version relation",
+        "scope:无 ranking/screening",
+        "scope:无 provenance ledger",
+        "scope:无跨轮 stop",
+        "ref:TRADITIONAL-NODES.md#L13-L16；Python package/CLI-like library"
+      ],
+      "source_refs": [
+        "output/fs02/r2/TRADITIONAL-NODES.md#L9-L16",
+        "https://github.com/CoLRev-Environment/search-query/blob/f6646075c19435a98af36eb4cfe3f34c36d5cc86/search_query/query.py",
+        "https://github.com/CoLRev-Environment/search-query/blob/f6646075c19435a98af36eb4cfe3f34c36d5cc86/search_query/registry.py"
+      ]
+    },
+    {
+      "id": "litsearchr",
+      "name": "elizagrames/litsearchr",
+      "scope": "只审固定提交 R term/Boolean/scrape/import paths；固定提交 0c108e3；未运行，旧 scraper 条款未验证。",
+      "values": [
+        "1",
+        "0",
+        "1",
+        "?",
+        "?",
+        "0",
+        "0",
+        "0",
+        "0",
+        "1",
+        "0",
+        "1",
+        "?",
+        "?",
+        "1"
+      ],
+      "cell_notes": [
+        "ref:TRADITIONAL-NODES.md#L18-L26；term extraction/co-occurrence/keyword expansion",
+        "scope:生成 Boolean string，不是 generic AST→platform compiler",
+        "ref:TRADITIONAL-NODES.md#L24-L26；OATD/NDLTD/OpenThesis 多 scraper route，旧且未运行",
+        "scope:人工 concept groups/语言处理，未确证 subject/venue filter",
+        "scope:import/dedup path 未确证 DOI/PMID canonicalization",
+        "ref:TRADITIONAL-NODES.md#L24；term expansion 不是 citation traversal",
+        "scope:scraper 不是 ID→OA resolver",
+        "scope:无页/section/bbox/citation anchor",
+        "scope:无全文 corpus search",
+        "ref:TRADITIONAL-NODES.md#L25；import_and_clean/remove_duplicates",
+        "scope:无版本/补充关系",
+        "ref:TRADITIONAL-NODES.md#L23；centrality/cutoff keyword ranking",
+        "scope:未见 source/query provenance ledger",
+        "scope:graph cutoff/recall check 不是 review stop loop",
+        "ref:TRADITIONAL-NODES.md#L20-L26；R package functions"
+      ],
+      "source_refs": [
+        "output/fs02/r2/TRADITIONAL-NODES.md#L18-L26",
+        "https://github.com/elizagrames/litsearchr/blob/0c108e30f03c773123da2e6fe3f7cb6581d7c523/R/term_selection.R",
+        "https://github.com/elizagrames/litsearchr/blob/0c108e30f03c773123da2e6fe3f7cb6581d7c523/R/write_scrape_test_searches.R"
+      ]
+    },
+    {
+      "id": "asreview",
+      "name": "ASReview",
+      "scope": "只审 learner/querier/stopper core；固定提交 79d5682；未审 import/persistence/web source，非完整项目。",
+      "values": [
+        "?",
+        "?",
+        "?",
+        "?",
+        "?",
+        "?",
+        "?",
+        "?",
+        "?",
+        "?",
+        "?",
+        "1",
+        "?",
+        "1",
+        "1"
+      ],
+      "cell_notes": [
+        "scope:learner core 接收 X/y，不生成学术 query",
+        "scope:未审 query syntax compiler",
+        "scope:未审 source adapters/import discovery",
+        "scope:未审 domain filter",
+        "scope:未审 identifier normalization",
+        "scope:未审 citation graph/snowball",
+        "scope:未审 OA resolver",
+        "scope:learner core 无 evidence location；项目路径未审",
+        "scope:未审 fulltext search",
+        "scope:未审 record dedup",
+        "scope:未审 version relation",
+        "ref:SOURCE-NODES.md#asreview；querier 直接 rank/query",
+        "scope:未审 provenance persistence",
+        "ref:SOURCE-NODES.md#asreview/stoppers；safe_stop/N/quantile/consecutive",
+        "ref:SOURCE-NODES.md#asreview/learner；ActiveLearningCycle library"
+      ],
+      "source_refs": [
+        "output/fs02/r2/SOURCE-NODES.md#asreview/asreview",
+        "https://github.com/asreview/asreview/blob/79d568212b2b0a78f9fd7be3c5117dfb890489f9/asreview/learner.py#L67-L219",
+        "https://github.com/asreview/asreview/blob/79d568212b2b0a78f9fd7be3c5117dfb890489f9/asreview/models/queriers.py#L55-L225",
+        "https://github.com/asreview/asreview/blob/79d568212b2b0a78f9fd7be3c5117dfb890489f9/asreview/models/stoppers.py#L38-L255"
+      ]
+    },
+    {
+      "id": "bibdedupe",
+      "name": "CoLRev bib-dedupe",
+      "scope": "只审 fixed commit match/cluster paths；固定提交 c97feab；未运行。",
+      "values": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "1",
+        "0",
+        "0",
+        "0",
+        "0",
+        "1",
+        "?",
+        "?",
+        "1",
+        "0",
+        "1"
+      ],
+      "cell_notes": [
+        "scope:dedup package 不生成 query",
+        "scope:无 query compiler",
+        "scope:无学术 discovery source",
+        "scope:无 domain filter",
+        "ref:SOURCE-NODES.md#BibDedupe；DOI/title/field matching",
+        "scope:无 citation expansion",
+        "scope:无 OA/fulltext resolver",
+        "scope:无 location anchor",
+        "scope:无全文检索",
+        "ref:SOURCE-NODES.md#BibDedupe；duplicate/maybe/cluster",
+        "scope:maybe/duplicate 不等于 version relation",
+        "scope:matching scores/candidate pairs 未确证 review ranking",
+        "ref:SOURCE-NODES.md#BibDedupe；audit labels/merge output",
+        "scope:单次 matching/cluster，无跨轮 stop",
+        "ref:SOURCE-NODES.md#BibDedupe；Python package"
+      ],
+      "source_refs": [
+        "output/fs02/r2/SOURCE-NODES.md#BibDedupe",
+        "output/fs02/r2/SOURCE-AUDIT.md#Surveyer/BibDedupe/Paper-Finder",
+        "https://github.com/CoLRev-Environment/bib-dedupe/blob/c97feab2e66095a6ff8e20ac9a6381f155b993b7/bib_dedupe/match.py#L86-L176",
+        "https://github.com/CoLRev-Environment/bib-dedupe/blob/c97feab2e66095a6ff8e20ac9a6381f155b993b7/bib_dedupe/cluster.py#L13-L120"
+      ]
+    },
+    {
+      "id": "systematic-review-pipeline",
+      "name": "nayeem-hossain/systematic-review-pipeline",
+      "scope": "只审固定提交 search/dedup/snowball/screen/state nodes；固定提交 4f8b316；源码已读、项目未运行。",
+      "values": [
+        "?",
+        "0",
+        "1",
+        "?",
+        "1",
+        "1",
+        "?",
+        "?",
+        "?",
+        "1",
+        "?",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      "cell_notes": [
+        "scope:query expansion 作为独立线索但本矩阵未绑定直接源码 ref，保留未知",
+        "scope:无平台语法 compiler",
+        "ref:SOURCE-NODES.md#systematic-review-pipeline；多源 search adapters",
+        "scope:已审节点未确证 subject/venue/language domain filter",
+        "ref:SOURCE-NODES.md#systematic-review-pipeline；DOI/title identity",
+        "ref:SOURCE-NODES.md#systematic-review-pipeline/snowball；OpenAlex 前后向边",
+        "scope:README/OA download 线索，当前 code ref 未确证 ID→OA resolver",
+        "scope:当前已审 state/screen 无页/section/bbox anchor",
+        "scope:当前已审节点未确证全文 corpus search",
+        "ref:SOURCE-NODES.md#systematic-review-pipeline/dedup；DOI/title dedup",
+        "scope:增量决策 ledger 不自动等于 research version relation",
+        "ref:SOURCE-NODES.md#屏幕账本；screen decisions/labels",
+        "ref:SOURCE-NODES.md#屏幕账本；source/record/reason/timestamp state",
+        "ref:SOURCE-NODES.md#屏幕账本；snowball rounds + carried/new/dropped_decided",
+        "ref:SOURCE-NODES.md#systematic-review-pipeline；scripts/state CLI nodes"
+      ],
+      "source_refs": [
+        "output/fs02/r2/SOURCE-NODES.md#systematic-review-pipeline",
+        "output/fs02/r2/SOURCE-NODES.md#屏幕账本、增量与雪​​球节点",
+        "https://github.com/nayeem-hossain/systematic-review-pipeline/blob/4f8b3166aeb6d96e06c1943fb59159a40f277cda/scripts/snowball.py#L65-L180",
+        "https://github.com/nayeem-hossain/systematic-review-pipeline/blob/4f8b3166aeb6d96e06c1943fb59159a40f277cda/scripts/screen.py#L82-L160"
+      ]
+    },
+    {
+      "id": "academic-mcp",
+      "name": "veale/academic-mcp",
+      "scope": "只审 fixed commit search/citations/discover/in_article/server nodes；固定提交 f493de6；未运行。",
+      "values": [
+        "1",
+        "0",
+        "1",
+        "1",
+        "1",
+        "1",
+        "?",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "?",
+        "1"
+      ],
+      "cell_notes": [
+        "ref:SOURCE-NODES.md#veale；semantic_query 2-4 paraphrases",
+        "scope:无 platform syntax compiler",
+        "ref:SOURCE-NODES.md#veale/search；Zotero/S2/OpenAlex fan-out",
+        "ref:SOURCE-NODES.md#veale/server/search；source/year/venue/domain hints",
+        "ref:SOURCE-NODES.md#veale/search；DOI/Zotero key/title merge",
+        "ref:SOURCE-NODES.md#veale/citations/discover；citation tree/co-citation",
+        "scope:缓存全文/fetch path 未确证 ID→OA resolver，保留未知",
+        "ref:SOURCE-NODES.md#veale/in_article/server；character range/section/snippet",
+        "ref:SOURCE-NODES.md#veale/in_article/in_corpus；BM25 fulltext/corpus",
+        "ref:SOURCE-NODES.md#veale/search；DOI/title merge",
+        "ref:SOURCE-NODES.md#veale/search；best DOI/superseded relation",
+        "ref:SOURCE-NODES.md#veale/search/discover；reranker/co-citation",
+        "ref:SOURCE-NODES.md#veale；diagnostics/source outcomes/cache metadata",
+        "scope:已审节点未见跨轮 stop/refresh loop",
+        "ref:SOURCE-NODES.md#veale/server；MCP tools"
+      ],
+      "source_refs": [
+        "output/fs02/r2/SOURCE-NODES.md#veale/academic-mcp",
+        "https://github.com/veale/academic-mcp/blob/f493de604eb672fdd7eb49edbc7a233c771c5a5a/src/academic_mcp/core/search.py#L379-L930",
+        "https://github.com/veale/academic-mcp/blob/f493de604eb672fdd7eb49edbc7a233c771c5a5a/src/academic_mcp/core/citations.py#L71-L209",
+        "https://github.com/veale/academic-mcp/blob/f493de604eb672fdd7eb49edbc7a233c771c5a5a/src/academic_mcp/server.py#L3481-L3529"
+      ]
+    },
+    {
+      "id": "open-deep-research",
+      "name": "LangChain Open Deep Research",
+      "scope": "只审固定提交 deep_researcher/state workflow；固定提交 1b7d2e8；provider/tool implementations 未审，未运行。",
+      "values": [
+        "?",
+        "0",
+        "?",
+        "?",
+        "?",
+        "?",
+        "?",
+        "?",
+        "?",
+        "?",
+        "?",
+        "?",
+        "0",
+        "1",
+        "1"
+      ],
+      "cell_notes": [
+        "scope:research brief/model planning，不确认显式 query rewrite",
+        "ref:SOURCE-NODES.md#open-deep-research；无 platform syntax compiler",
+        "scope:工具多源性由配置决定，未审 academic adapters",
+        "scope:未审 domain filter",
+        "scope:未审 identifier normalization",
+        "scope:未审 citation expansion",
+        "scope:未审 OA resolver",
+        "scope:未审 page/section/bbox/citation anchor",
+        "scope:未审 fulltext search implementation",
+        "scope:未审 record dedup",
+        "scope:未审 version/research relations",
+        "scope:generic supervisor，无 academic ranking/screen code",
+        "scope:SOURCE-NODES.md#open-deep-research；raw notes/messages 非结构化 provenance ledger",
+        "ref:SOURCE-NODES.md#open-deep-research；ResearchComplete/max iterations/tool-call limit",
+        "ref:SOURCE-NODES.md#open-deep-research；LangGraph graph/state interface"
+      ],
+      "source_refs": [
+        "output/fs02/r2/SOURCE-NODES.md#langchain-ai/open_deep_research",
+        "https://github.com/langchain-ai/open_deep_research/blob/1b7d2e80db9faa586165c60e09096dbbfd483a64/src/open_deep_research/deep_researcher.py#L178-L349",
+        "https://github.com/langchain-ai/open_deep_research/blob/1b7d2e80db9faa586165c60e09096dbbfd483a64/src/open_deep_research/deep_researcher.py#L365-L509",
+        "https://github.com/langchain-ai/open_deep_research/blob/1b7d2e80db9faa586165c60e09096dbbfd483a64/src/open_deep_research/state.py#L15-L95"
+      ]
+    }
+  ],
+  "notes": [
+    "三组拆分：query_planning→query_reformulation/query_syntax_compilation；fulltext_location→oa_resolution/evidence_anchor；dedup_research_relations→record_dedup/research_version_relations。",
+    "ranking_screening、evidence_provenance、iterative_stop 均按代码定义单独判断；README/Skill/API contract 不升级 code 值。",
+    "Sider 宿主合同与公开 HTTP probe 未纳入 code-only rows；未知不计为 0。"
+  ]
+}

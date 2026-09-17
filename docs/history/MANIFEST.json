@@ -1,0 +1,203 @@
+{
+  "date": "2026-09-17",
+  "kind": "historical-document-public-copies",
+  "note": "Historical evidence and plans; not current execution instructions. Local IDs and machine paths redacted; links adjusted. Original source hashes refer to unpublished local originals, not public-copy bytes.",
+  "files": [
+    {
+      "source": "docs/work-items/FS01-WORK-ITEM.md",
+      "path": "docs/history/work-items/FS01-WORK-ITEM.md",
+      "source_sha256": "a890e01d55143838be2c14f20681efac000300dfa7070893b2e3d289d3be6ba7",
+      "published_sha256": "d96ba9262cee5098835c8676208a85d9f2a9fb2e89d8ce43f316f37d541f4218",
+      "bytes": 34790
+    },
+    {
+      "source": "docs/work-items/FS02-WORK-ITEM.md",
+      "path": "docs/history/work-items/FS02-WORK-ITEM.md",
+      "source_sha256": "3dce71d621a5a7e152efe5487a6ce2034cb1eac8a5fb98bcb3fb6a7befa5e568",
+      "published_sha256": "0b39a70c2321274e4a75cbff996c3348a0a5e1af07611715c87f113b2aedff61",
+      "bytes": 9068
+    },
+    {
+      "source": "output/field-search-reproduction/EXPERIMENT.md",
+      "path": "docs/history/fs01/EXPERIMENT.md",
+      "source_sha256": "0a25a68a1bdbce664bd62e12b6bc97ddb38a00f841c8a592e38cd01c5aa59739",
+      "published_sha256": "b3ff3e3a4f739f67cb8f717803a31bc0e656f839bb8e3c3424a8723feb081fcd",
+      "bytes": 3414
+    },
+    {
+      "source": "output/field-search-reproduction/RESULTS.md",
+      "path": "docs/history/fs01/RESULTS.md",
+      "source_sha256": "172eff6662d9d1ce54b7af48ef08e1993b50e323988c91c285567194735bd44d",
+      "published_sha256": "c0382e9aa3c3016ada780c3277a086221f142a54c81132f9f5faf1707dfb300f",
+      "bytes": 9354
+    },
+    {
+      "source": "output/field-search-reproduction/ROADMAP.md",
+      "path": "docs/history/fs01/ROADMAP.md",
+      "source_sha256": "6393b89bc405b2ab0e6dd043210f04ba5e8426a05ad26dcd8f10e30b88a9bc45",
+      "published_sha256": "81c23312cb4cb4d137d5a6c44956def112c5216bdc08f7039361d5452c11322a",
+      "bytes": 36503
+    },
+    {
+      "source": "output/field-search-reproduction/evidence/independent-review.md",
+      "path": "docs/history/fs01/evidence/independent-review.md",
+      "source_sha256": "eaa0b8e969632575c31496480587532a3c73a54c520c0b191490494b0944979b",
+      "published_sha256": "40e9bdf72cf22a8b12710e8195e6309c2c8871321892c8ce1ed018fac3705553",
+      "bytes": 10972
+    },
+    {
+      "source": "output/field-search-reproduction/evidence/candidate-disposition.md",
+      "path": "docs/history/fs01/evidence/candidate-disposition.md",
+      "source_sha256": "70fa4c60c4bddc8f7cecde5a1e8b8dfe6cb46c107faeab513292ac9d26661875",
+      "published_sha256": "610ef71388bcae41e3c708f215b7e666a53b27101caa2815c3f76f3dceb64563",
+      "bytes": 9923
+    },
+    {
+      "source": "output/field-search-reproduction/runs/r21/RESULT.md",
+      "path": "docs/history/fs01/runs/r21/RESULT.md",
+      "source_sha256": "d14d8dd2d04cf7355f86384cadc5f5a72554d27b46bb6ce2132283104df8ee45",
+      "published_sha256": "46599f002ef4fb970f6d959982f8d956b14fc190f8cb6074fb94e9b052ee1bc9",
+      "bytes": 5279
+    },
+    {
+      "source": "output/field-search-reproduction/runs/r21/critic/VERDICT-FS01-R21-v2.md",
+      "path": "docs/history/fs01/runs/r21/critic/VERDICT-FS01-R21-v2.md",
+      "source_sha256": "a180c215081908fd53f957a44666aebfd6bf0e24005842f64e3179072f704dcd",
+      "published_sha256": "dcbd1f096ea16a1828a7d5f70ff379eccf1919f8e25a07846de633469599a5e8",
+      "bytes": 2362
+    },
+    {
+      "source": "output/field-search-reproduction/runs/r22/INSTALLED-RESULT.md",
+      "path": "docs/history/fs01/runs/r22/INSTALLED-RESULT.md",
+      "source_sha256": "5d40eb9366c7b42b022c6e0b25555274de541df849539f94559075651a144598",
+      "published_sha256": "4a4714ad8efd0502c8b5431913d9a6dbbd1df1a1a06de25ee708c979cc62b654",
+      "bytes": 5324
+    },
+    {
+      "source": "output/field-search-reproduction/runs/r22/critic/INSTALLED-VERDICT-v2.md",
+      "path": "docs/history/fs01/runs/r22/critic/INSTALLED-VERDICT-v2.md",
+      "source_sha256": "ad1cc39018bc3cb4c341bd917274f8e743fe9f72f08315592b27f33fd95d1923",
+      "published_sha256": "ff93e3300749cffd2a7b325972c9a54594948f11dc3fdf24d84d78e7f6935623",
+      "bytes": 1630
+    },
+    {
+      "source": "output/fs02/r1/SUMMARY.md",
+      "path": "docs/history/fs02/r1/SUMMARY.md",
+      "source_sha256": "e7150dd0cdae4b51f88299e7e31626e7395fa810c28798609798f174c6fbe29a",
+      "published_sha256": "cb646c60b4c83531e9170990503d935e5747b047593b97ea7d7cb83f7f7e9b4e",
+      "bytes": 1805
+    },
+    {
+      "source": "output/fs02/r2/SUMMARY.md",
+      "path": "docs/history/fs02/r2/SUMMARY.md",
+      "source_sha256": "0770f0d9aa6d25875d7db587543357be88e042e9efb280505e932cdb75899e48",
+      "published_sha256": "4ac1a5320bfe795a8484585c5dcf1f5326c448b5eb74be2cc7b5752efdd486f0",
+      "bytes": 4117
+    },
+    {
+      "source": "output/fs02/r2/REPORT.md",
+      "path": "docs/history/fs02/r2/REPORT.md",
+      "source_sha256": "70eb543ad6af456160ab6658cb2207e92ba1789178387c0c995c1257bd42d5bd",
+      "published_sha256": "f636d945d1e21ba296d3f59fff0441d2ff1372d581f96dfccd1c88a2fc64a672",
+      "bytes": 25368
+    },
+    {
+      "source": "output/fs02/r2/BASELINE.md",
+      "path": "docs/history/fs02/r2/BASELINE.md",
+      "source_sha256": "0806fb60d768ed3461a84dc175edb4632509510d87e261c9bdb28c21bbe1643d",
+      "published_sha256": "7670de738d3d07bc9596c6ce8b17951495764ca6a9080bc08beba7d4be3d493e",
+      "bytes": 5665
+    },
+    {
+      "source": "output/fs02/r2/CODE-MATRIX.md",
+      "path": "docs/history/fs02/r2/CODE-MATRIX.md",
+      "source_sha256": "48b66536bf7f9eb9bc5c5b47456b626a787a3f90440545aa82dceb9fe2d4ba9d",
+      "published_sha256": "f499aec792102498c671cc4b7f6097f0d987ab26897ec0bcbdaeae8844bf6157",
+      "bytes": 3641
+    },
+    {
+      "source": "output/fs02/r2/OVERLAP.md",
+      "path": "docs/history/fs02/r2/OVERLAP.md",
+      "source_sha256": "05238b2e556fdbcb2ca02a6ea90a14a1f0a6e046df21d74eb790d7f3549a463b",
+      "published_sha256": "c16a65b2596f385a024bcbc1600664b571f1fcef9c7bcce687114cc38f308de0",
+      "bytes": 2410
+    },
+    {
+      "source": "output/fs02/r2/FINAL-REVIEW.md",
+      "path": "docs/history/fs02/r2/FINAL-REVIEW.md",
+      "source_sha256": "2b82404bf12cac5105edc02db0d812d381e65335abb021032d096ebf9ae815d1",
+      "published_sha256": "6b719a08292f4a9a345c6d2007ada28d5fd2f3ec48c187c41ee27150eeae605c",
+      "bytes": 2254
+    },
+    {
+      "source": "output/fs02/r2/METHODS-SYNTHESIS.md",
+      "path": "docs/history/fs02/r2/METHODS-SYNTHESIS.md",
+      "source_sha256": "4be0c180e4a958ec3aea2a7b1bc70f7821b2c7731ac858528d67c1ed82def39e",
+      "published_sha256": "e5d81662f677813d6420ba1fcdf1d8baeca3b520122d600e0283fd031b0b10cd",
+      "bytes": 5102
+    },
+    {
+      "source": "output/fs02/r2/DISCOVERY-MAP.md",
+      "path": "docs/history/fs02/r2/DISCOVERY-MAP.md",
+      "source_sha256": "d13c557efd5149ef3fdaba7f8b2864b2ec8c2794aedb336ea5f1b6111c5e1bc7",
+      "published_sha256": "20c4436282a77547eed262d561810cd8fdca9da0baeb3f8134fdb49adac93a3c",
+      "bytes": 24386
+    },
+    {
+      "source": "output/fs02/r2/SOURCE-NODES.md",
+      "path": "docs/history/fs02/r2/SOURCE-NODES.md",
+      "source_sha256": "6664095622e980549392912d2ff3426af1d7fe23d76f8aa5d257dbe472a1d11a",
+      "published_sha256": "3143d7b77e9729fbb899b6bbb4fa14d6e736e586c8f1f31a844fec79575bd917",
+      "bytes": 37498
+    },
+    {
+      "source": "output/fs02/r2/LICENSES.md",
+      "path": "docs/history/fs02/r2/LICENSES.md",
+      "source_sha256": "3fe870be93736d7d6d944cb59ad8a10ca6b9fd82d18eb469db17e7a1696a5a7f",
+      "published_sha256": "9a273d1873c86dfd0f34e203d18ed690ef1a8986c46876bb2a5bb49d8a6f8202",
+      "bytes": 4910
+    },
+    {
+      "source": "output/fs02/r2/TRADITIONAL-NODES.md",
+      "path": "docs/history/fs02/r2/TRADITIONAL-NODES.md",
+      "source_sha256": "c01d5a9a0b51efbcb6c90b052cfc7d26dc50f15008726f52f7422672ed132f20",
+      "published_sha256": "d2eb34253a3a47cfe0e6b7b8bc5b167b66463f5beba933373f5466cbafda91db",
+      "bytes": 29497
+    },
+    {
+      "source": "output/fs02/r2/EXPANSION-METHODS.md",
+      "path": "docs/history/fs02/r2/EXPANSION-METHODS.md",
+      "source_sha256": "a00f17c7fa9420600f070bddb36ee7db151ed17c1d4cc09d7469b720b97e9bc0",
+      "published_sha256": "621727d0c720f4c21b8ddec11791b8844c9e3fb7bbd983b283c79d301852edf7",
+      "bytes": 26128
+    },
+    {
+      "source": "output/fs02/r2/EXPANSION-TRADITIONAL.md",
+      "path": "docs/history/fs02/r2/EXPANSION-TRADITIONAL.md",
+      "source_sha256": "147af0de3a2e4c7444714fd79f0bdc2b8b3c32d27dd6d8070254797e85901e21",
+      "published_sha256": "921b8229b7e02a0aad51237d515a4c870e1529f912a53356d279b3ed1ce7369e",
+      "bytes": 24515
+    },
+    {
+      "source": "output/fs02/r2/DISCOVERY-CLOSURE-METHODS.md",
+      "path": "docs/history/fs02/r2/DISCOVERY-CLOSURE-METHODS.md",
+      "source_sha256": "5206cd8a65c3ed1b2a72a22ae2f002045135d585df12f5e9a8b32e7d8780d2c5",
+      "published_sha256": "eed462a6ea301b3a5ff9de12db0555b185dbcdbb232631f2e6606e861cf87081",
+      "bytes": 22603
+    },
+    {
+      "source": "output/fs02/r2/CAPABILITY-MATRIX-CODE.json",
+      "path": "docs/history/fs02/r2/CAPABILITY-MATRIX-CODE.json",
+      "source_sha256": "76f3f073dfb7fc3696a7a719b68a182766a6401c225707f1c5176b5dc02cf796",
+      "published_sha256": "a64f1d74fc7db0f042701435f666e7f35faaa86d8877ecc19e563d4a873f3be9",
+      "bytes": 33811
+    },
+    {
+      "source": "output/fs02/r2/OVERLAP.json",
+      "path": "docs/history/fs02/r2/OVERLAP.json",
+      "source_sha256": "a5315d5c9c68ffe3c6198dfa810c96b35bc65f0d58e25a52f640881946993066",
+      "published_sha256": "6b4f4c5862780ad0ab66c2d82373768188bf1b1fb30cb0f6e03ed9a732c3f677",
+      "bytes": 39534
+    }
+  ]
+}
