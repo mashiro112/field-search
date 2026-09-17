@@ -151,6 +151,7 @@ Every published original source file is listed below. Hashes refer to exact sour
 - [integrations/websearch-components/LICENSE](../integrations/websearch-components/LICENSE) — 1091 bytes; SHA256 `2db9de29513f0b2199697a836e7cc93b6c14b0d6e20a24aa47b93017b0ccd60b`
 - [references/crawl4ai-runtime-r4.md](../references/crawl4ai-runtime-r4.md) — 1987 bytes; SHA256 `1e572af36ea11661da1aa51e36874afc0b3e6f9309c19955def53e3dfd164caa`
 - [references/evidence.md](../references/evidence.md) — 8699 bytes; SHA256 `87b24acb8bca9b66d13a947c05deabb6160d26c8767ae1ae99eeb098b55d19fc`
+- [references/gemini-deep-research.md](../references/gemini-deep-research.md) — 3810 bytes; SHA256 `8c99f189de0a6e891028a39287c067b97aa49c6ef981c2fa22617ec354edce95`
 - [references/gemini-report.md](../references/gemini-report.md) — 3889 bytes; SHA256 `2d723865f32c279a6d7fbf682b065eed89da91fbd8e107ae3b86f99b90071c2f`
 - [references/integration-map.md](../references/integration-map.md) — 9033 bytes; SHA256 `cfdb468b30f64781c7d39eaf81baef9662f31ff95ce467d277bb82c12762ca67`
 - [references/providers.md](../references/providers.md) — 21349 bytes; SHA256 `6d84acaf52c1d7abfc879d3667dfb0ee91895a69ca9d7219005a179bdb7a0071`
@@ -172,5 +173,5 @@ Every published original source file is listed below. Hashes refer to exact sour
 - [scripts/video_worker.py](../scripts/video_worker.py) — 7119 bytes; SHA256 `65792e667aed2a6e1c1aa26202b85fe36a2391cc16a5fe9346a7d89ce17523da`
 - [scripts/video.py](../scripts/video.py) — 10471 bytes; SHA256 `b936ee62668ce78a747f47e22ab5f78e2fff0859c38d61d947edb902a34d8ccd`
 - [scripts/xiaohongshu.py](../scripts/xiaohongshu.py) — 10380 bytes; SHA256 `8cf4732ba0ed4032cb5634bf323ea671c76881921f2624a31d4331e0f468e994`
-- [SKILL.md](../SKILL.md) — 19199 bytes; SHA256 `b9164f7a6cad83aac224f853a0756f12d9edb485ad58a3be366c2bc94be6da15`
+- [SKILL.md](../SKILL.md) — 20323 bytes; SHA256 `6515799da198e44128c285893a9b74e2249454c4c1bf8ad3145a69798a788213`
 - [THIRD_PARTY_NOTICES/Crawl4AI-LICENSE.txt](../THIRD_PARTY_NOTICES/Crawl4AI-LICENSE.txt) — 9998 bytes; SHA256 `193fe32704bee15cd74f5153e569cdf830e26445e19798a55daee32da40758aa`

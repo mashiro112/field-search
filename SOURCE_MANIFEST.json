@@ -1,7 +1,7 @@
 {
   "snapshot_date": "2026-09-17",
   "description": "Exact installed source snapshot; caches and runtime artifacts excluded.",
-  "file_count": 172,
+  "file_count": 173,
   "files": [
     {
       "path": "agents/openai.yaml",
@@ -749,6 +749,11 @@
       "sha256": "87b24acb8bca9b66d13a947c05deabb6160d26c8767ae1ae99eeb098b55d19fc"
     },
     {
+      "path": "references/gemini-deep-research.md",
+      "bytes": 3810,
+      "sha256": "8c99f189de0a6e891028a39287c067b97aa49c6ef981c2fa22617ec354edce95"
+    },
+    {
       "path": "references/gemini-report.md",
       "bytes": 3889,
       "sha256": "2d723865f32c279a6d7fbf682b065eed89da91fbd8e107ae3b86f99b90071c2f"
@@ -855,8 +860,8 @@
     },
     {
       "path": "SKILL.md",
-      "bytes": 19199,
-      "sha256": "b9164f7a6cad83aac224f853a0756f12d9edb485ad58a3be366c2bc94be6da15"
+      "bytes": 20323,
+      "sha256": "6515799da198e44128c285893a9b74e2249454c4c1bf8ad3145a69798a788213"
     },
     {
       "path": "THIRD_PARTY_NOTICES/Crawl4AI-LICENSE.txt",
