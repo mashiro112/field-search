@@ -1,6 +1,6 @@
 # Google Deep Research 接入路线比较
 
-2026-09-17。状态：官方文档与现有 FS 路由核查后的建议，尚未实施或实测完整研究任务。既有 R25 验收状态不变。
+2026-09-17。此文是接入选型背景，尚未实测自动启动到完成的完整研究任务。后续范围已收束到[先读取与复用现成报告的 R26](R26-GEMINI-REPORT-IMPORT.md)：真实 Docs 导出已取得，本地入口实施中。既有 R25 验收状态不变。
 
 目标是给 FS 增加真正的 Gemini Deep Research，并优先使用已有网页订阅额度。当前 FS 的 Gemini grounded-search 适配器只是模型加 Google Search，不是完整 Deep Research 产品。
 

@@ -2,7 +2,7 @@
 
 更新：2026-09-17。此页连接当前源码、历史证据与新科研流程；状态以各层的实际证据范围区分。
 
-接入讨论：[Google Deep Research 路线比较](reviews/GOOGLE-DEEP-RESEARCH-OPTIONS.md)。建议优先复用 Gemini 网页订阅，报告读取可结合 Docs；官方 API 留作按量付费的自动化选项。当前仅文档核查与建议，尚未实施，不能把现有 grounded search 称为已接通 Deep Research。
+当前进行中：[R26 读取现成 Gemini Deep Research 报告](reviews/R26-GEMINI-REPORT-IMPORT.md)。真实 Docs→Markdown 导出已成功并与网页对照正文及表格；本地导入、限量预览和离线复用入口正在实施，尚未验收。此阶段不包含自动启动或监控研究，也不把 grounded search 当作 Deep Research。[路线比较](reviews/GOOGLE-DEEP-RESEARCH-OPTIONS.md)保留为选型背景。
 
 当前最新：[R25 Bilibili 字幕能力已安装并通过独立验收](reviews/R25-BILIBILI.md)，在已有 video 入口增加 B 站字幕、分 P、时间定位、关键词查找及批量复用。170 文件源码清单、索引与指令合集已同步，会话和完整测试字幕不公开。科研 FS03 状态保持独立。
 
