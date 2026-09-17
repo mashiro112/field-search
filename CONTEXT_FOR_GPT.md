@@ -6,7 +6,7 @@ FS development is published at substantive checkpoints and handoffs under the ow
 
 Field Search aims to find mature reusable solutions, practical experience, relevant counterexamples, and decisive source material. It adapts effort to the information gap. Source count and report length are not success metrics.
 
-Current work in progress: [R25 Bilibili captions](docs/reviews/R25-BILIBILI.md), requested as an extension of the existing video route. Tool selection and real access checks are underway; R25 is not yet accepted or included in the published source snapshot. R24 remains the accepted implementation baseline described above.
+Current work in progress: [R25 Bilibili captions](docs/reviews/R25-BILIBILI.md), requested as an extension of the existing video route. Anonymous old/new endpoint checks have not yet produced a stable transcript success; a separate QR login is being prepared for bounded validation. Initial implementation review found issues being corrected. R25 is not yet accepted or included in the published source snapshot. R24 remains the accepted implementation baseline described above.
 
 ## Whole-project orientation and history
 
