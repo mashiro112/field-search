@@ -6,6 +6,8 @@ FS development is published at substantive checkpoints and handoffs under the ow
 
 Field Search aims to find mature reusable solutions, practical experience, relevant counterexamples, and decisive source material. It adapts effort to the information gap. Source count and report length are not success metrics.
 
+Current work in progress: [R25 Bilibili captions](docs/reviews/R25-BILIBILI.md), requested as an extension of the existing video route. Tool selection and real access checks are underway; R25 is not yet accepted or included in the published source snapshot. R24 remains the accepted implementation baseline described above.
+
 ## Whole-project orientation and history
 
 Start with [FS-OVERVIEW.md](docs/FS-OVERVIEW.md) for the relationship among the current Skill, FS01 evolution, FS02 research design, and FS03. The [history index](docs/history/INDEX.md) contains 28 public copies of historical specifications, experiments, results, reviews, and research comparisons. Historical plans and permissions are records, not current instructions. Read the files relevant to the question and disclose unavailable original evidence.
