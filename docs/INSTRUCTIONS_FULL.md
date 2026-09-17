@@ -187,6 +187,14 @@ For iterative improvement, freeze the previous version before comparing, separat
 - `scripts/document.py`: reuses `hec-ovi/websearch-skill` 0.6.1 commit `1bd31c8267758fccc247b1ec2299cf47cdbecb9a` extraction + pagination from the isolated installed runtime. Uses existing Jina public transport. Original end-to-end websearch failed; do not promote component success to whole-tool reproduction. MIT source retained under FS01 deployments; dependencies retain their own licenses.
 - research-skill's investigation/contrarian/synthesis/storage/retrieval workflow reproduced in FS01 task-local sandbox; no automatic project/global `.research` added to this Skill. Deep Discovery is an optional architecture interrogation method, not an added information source.
 
+# R24 explicit material and task-local routes (2026-09-17)
+
+- `scripts/video.py` / `scripts/video_worker.py`: explicit YouTube caption-only route using a caller/configured isolated `youtube-transcript-api` runtime. It returns timestamped segments, manual/automatic type and text matches; it does not download media, read cookies, use ASR or call paid transcription. The worker is an adapter, not a reimplementation of caption extraction.
+- `scripts/discourse.py`: bounded public Discourse topic reader using the documented topic JSON and batched post-ID endpoint. It keeps post URLs, IDs, floors, author/time, cleaned body and reply targets; `post_limit`, `request_budget` and `batch_size` expose partial/unfinished state. It has no login/cookie path.
+- `scripts/runtime_config.py` plus `search.py doctor --source ...`: local non-secret path references for optional runtime/reader paths. The default doctor is local-only; `--probe-session` is the explicit R22 read-only probe. A path existing is never reported as an authorized session.
+- `scripts/batch.py`: task-local manifest runner for existing `read`, `video` and `discourse` routes. Request keys include per-item kind/target/options; successful same-key results reuse, failed/partial results retry, and `--refresh`/`--refresh-id` force explicit reads. It does not create a global index or framework.
+- `references/r24-routes.md` documents arguments, schemas, limits and portable configuration examples. Actual machine paths and session contents remain outside the Skill and public evidence.
+
 
 ---
 ## File: references/providers.md
@@ -346,6 +354,160 @@ python <skill-dir>/scripts/search.py read "https://example.com" --reader jina
 
 `ok` means a record was retrieved, not that an article was read or an experience proved. Read `kind`, `source_read`, `scope`, and truncation flags. Do not render returned HTML as active code. Keep original records expandable and send only decisive evidence to a calling agent. The integration manifest records installation, not ongoing live health; probe only the task-relevant routes.
 
+## R24 explicit routes
+
+These commands are opt-in and are not added to ordinary source fan-out. See
+[r24-routes.md](r24-routes.md) for the complete schemas and failure semantics.
+
+```text
+python <skill-dir>/scripts/search.py video "https://www.youtube.com/watch?v=<id>" --config <local-config.json> --language en --find "term"
+python <skill-dir>/scripts/search.py discourse "https://forum.example.org/t/topic/123" --post-limit 50 --request-budget 6 --batch-size 20
+python <skill-dir>/scripts/search.py doctor --source youtube --config <local-config.json>
+python <skill-dir>/scripts/search.py doctor --source xiaohongshu --probe-session --config <local-config.json>
+python <skill-dir>/scripts/search.py batch create <items.json> --out <new-manifest.json>
+python <skill-dir>/scripts/search.py batch run <manifest.json> --out <new-result.json>
+```
+
+`video` uses only the configured isolated `youtube-transcript-api` runtime and
+returns caption segments with timestamps; no media download, ASR, cookies or
+paid fallback. `discourse` follows public `post_stream.stream` IDs in bounded
+post batches rather than assuming the first topic response is complete.
+`doctor` separates path/runtime checks from the explicit XHS session probe.
+`batch` is task-local: successful same-key items reuse their stored output,
+partial/error/unavailable items are retried, and `--refresh`/`--refresh-id`
+force a new read without overwriting the input manifest.
+
+
+---
+## File: references/r24-routes.md
+
+# R24 optional routes
+
+These routes are explicit additions to the common `scripts/search.py` entry.
+They are not selected by ordinary `search`, `read`, `auto`, or source fan-out.
+
+## Video captions
+
+Use an isolated Python runtime containing [youtube-transcript-api](https://github.com/jdepoix/youtube-transcript-api):
+
+```text
+<python> <skill-dir>/scripts/search.py video "https://www.youtube.com/watch?v=<id>" \
+  --config <local-config.json> --language en --find "term" --out <new-result.json>
+```
+
+The accepted input is a YouTube watch/shorts/embed URL or an 11-character
+video ID. `--language` is a comma-separated preference list. `--subtitle-type`
+is `any` (manual first, then automatic), `manual`, or `auto`. Returned records
+contain `start_seconds`, `duration_seconds`, `end_seconds`, `index`, and text;
+`matches` contains the segments matching `--find`. The result also preserves
+language, generated/manual type, available-language metadata, segment counts,
+and the provider version.
+
+This route only requests captions. It does not download audio/video, use
+cookies, invoke ASR, use a proxy supplied by the route, or call a paid
+transcription service. `no_subtitles`, `no_subtitles_for_language`,
+`video_unavailable`, `access_blocked`, and provider/runtime failures remain
+unavailable/error states. A segment cap produces `partial` and an explicit
+`max_segments` reason. With `--out`, complete segments are saved to the new
+file while stdout contains only bounded metadata and up to five match previews;
+use the saved file for later locating rather than refetching.
+
+## Discourse topics
+
+Use a public HTTPS topic URL:
+
+```text
+<python> <skill-dir>/scripts/search.py discourse \
+  "https://forum.example.org/t/topic-slug/123" \
+  --post-limit 50 --request-budget 6 --batch-size 20 --timeout 20 \
+  --out <new-topic.json>
+```
+
+The first topic JSON response is not treated as the complete thread. The
+adapter follows the public `post_stream.stream` IDs with bounded
+`/t/<id>/posts.json?post_ids[]=...` requests. Each record retains a public post
+URL, topic/post IDs, floor number, author, creation/update time, cleaned text,
+and available `reply_to_post_number`/`reply_to_post_id` fields.
+
+`--post-limit` bounds returned posts, `--request-budget` includes the initial
+topic request, and `--batch-size` bounds IDs in each follow-up. A budget limit,
+missing stream, incomplete post batch, 401/403/429, or another access/network
+failure is preserved in `read.incomplete_reasons`/`failure`; records are not
+promoted to complete evidence. Long post text may include the existing
+`text_full` companion when the bounded display text is clipped; `post_limit`
+is a post-count bound, not a promise that the entire JSON file is small. With
+`--out`, stdout contains only topic/read statistics and a file reference; the
+complete posts remain in the new local file. The route is public/read-only: it
+does not log in, read cookies, or infer private access. See the [Discourse API documentation](https://docs.discourse.org/).
+
+## Runtime configuration and doctor
+
+The optional local JSON configuration contains only path references. The
+default location is a user-local `field-search/config.json`; pass `--config`
+to use another file. A portable shape is:
+
+```json
+{
+  "schema_version": 1,
+  "runtimes": {
+    "youtube_transcript_python": "C:/path/to/isolated/Scripts/python.exe"
+  },
+  "readers": {
+    "xiaohongshu": {
+      "session_root": "C:/authorized/isolated/session",
+      "adapter_path": "C:/authorized/isolated/readonly_adapter.py",
+      "python_path": "C:/authorized/isolated/.venv/Scripts/python.exe"
+    }
+  }
+}
+```
+
+Do not put tokens, cookies, passwords, browser data, QR files, or session
+contents in this file. The R22 session path is only a reference; the config
+loader and doctor never read its contents.
+
+```text
+<python> <skill-dir>/scripts/search.py doctor --source youtube --config <local-config.json>
+<python> <skill-dir>/scripts/search.py doctor --source xiaohongshu --config <local-config.json>
+<python> <skill-dir>/scripts/search.py doctor --source xiaohongshu --probe-session --config <local-config.json>
+```
+
+Default checks are local: configured/path-exists, optional package import, and
+route-file presence are reported separately. `--probe-session` is the only
+targeted network check and performs one bounded read-only R22 adapter search;
+`path_exists` never implies `session_authorized`.
+
+## Task-local batch reuse
+
+Create a small manifest; each item owns its target and options:
+
+```json
+{
+  "items": [
+    {"id": "page", "kind": "read", "target": "https://example.org/a", "options": {"reader": "jina"}},
+    {"id": "captions", "kind": "video", "target": "https://www.youtube.com/watch?v=<id>", "options": {"language": "en", "find": "term"}},
+    {"id": "forum", "kind": "discourse", "target": "https://forum.example.org/t/topic/123", "options": {"post_limit": 20}}
+  ]
+}
+```
+
+```text
+<python> <skill-dir>/scripts/search.py batch create <items.json> --out <new-manifest.json>
+<python> <skill-dir>/scripts/search.py batch run <manifest.json> --out <new-result.json>
+<python> <skill-dir>/scripts/search.py batch run <result.json> --out <new-retry.json>
+<python> <skill-dir>/scripts/search.py batch run <result.json> --refresh-id captions --out <new-refresh.json>
+<python> <skill-dir>/scripts/search.py batch status <result.json>
+```
+
+The request key includes `kind`, target, and item options. Only `ok` and
+`no_results` items with the same key are reused; partial/error/unavailable
+items are attempted again. `--refresh` re-reads every item and
+`--refresh-id` re-reads selected items. The original manifest is never
+overwritten. With `--out`, stdout is a bounded run summary; the saved result
+manifest contains child outputs needed for reuse and can be inspected on
+demand. The batch runner uses separate child invocations and does not
+share mutable parameters between items or create a global index.
+
 
 ---
 ## File: references/source-recipes.md
@@ -439,6 +601,7 @@ Choose and state the unresolved condition that justifies a deeper route before e
   ~~~
 
   Search accepts a returned-result limit of 1..5. Feed accepts only an opaque `r22:` reference; no access token or URL token is accepted. `--max-comments` is a comment-loading target of 1..3, not a hard returned-item limit. Preserve the adapter's actual returned count, `has_more`, unknown and truncation fields. This route does not expose login, cookies, QR data, session paths, downloads or an output-file writer.
+- **Explicit R24 material routes:** Use `scripts/search.py video <YouTube URL-or-ID>` for caption-only, timestamped reading through the configured isolated `youtube-transcript-api` runtime; use `scripts/search.py discourse <public Discourse topic URL>` for bounded topic/post JSON reading. Neither route downloads media, logs in, reads cookies, or silently falls back to ASR/paid services. Use `search.py doctor --source ...` for targeted local/runtime checks; `--probe-session` is an explicit Xiaohongshu read-only probe and path existence is not authorization. Use `search.py batch create/run/status` only for a small task-local manifest when successful results should be reused and failed items retried. Read [references/r24-routes.md](references/r24-routes.md) for arguments, schemas and limits.
 - **Recent community investigation:** `scripts/search.py recent` delegates to the pinned last30days keyless engine with a caller-authored plan and explicit cutoff date. Inspect its full source records and nested failures, then read originals and synthesize; the printed top clusters can omit decisive low-engagement issues.
 - **Long originals:** `scripts/search.py read` on general public pages uses websearch's extraction and lossless pagination through the existing public Jina route. Extraction completeness still needs human/model judgment; the saved raw response remains available for comparison. `scripts/search.py document find/open` reuses the snapshot offline.
 

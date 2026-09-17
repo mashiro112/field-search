@@ -11,7 +11,7 @@ Start with [CONTEXT_FOR_GPT.md](CONTEXT_FOR_GPT.md). Then read [the full first-p
 - [FS Skill full-picture guide](docs/FS-OVERVIEW.md) and [28-document history index](docs/history/INDEX.md): goals, evolution, experiments, bounded reviews, and academic research design
 - [Academic evidence-to-writing SOP](docs/academic-evidence-to-writing/SOP.md): the current academic default, with [FS03 specification](docs/academic-evidence-to-writing/FS03-WORK-ITEM.md) and [reusable templates](docs/academic-evidence-to-writing/templates.md); specification complete, awaiting a real task trial
 - [Skill entrypoint](SKILL.md)
-- [Complete source index](docs/COMPLETE_SOURCE_INDEX.md): every one of the 162 original source files
+- [Complete source index](docs/COMPLETE_SOURCE_INDEX.md): every original source file; current count and hashes are in the manifest
 - [Source manifest](SOURCE_MANIFEST.json): exact file sizes and SHA-256 hashes
 - [Integration map](references/integration-map.md): installed code, adapted methods, and unavailable or external services
 - [Provider/runtime notes](references/providers.md)

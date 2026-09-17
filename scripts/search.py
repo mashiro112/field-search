@@ -13,10 +13,12 @@ import json
 import os
 from pathlib import Path
 import re
+import subprocess
 import sys
 import time
 from urllib import error, parse, request
 import integrated
+import runtime_config
 
 PUBLIC = ('github-repos', 'github-issues', 'hn', 'hn-comments') + integrated.SOURCES
 EXTERNAL = ('x', 'xai', 'gemini')
@@ -307,8 +309,125 @@ def run_one(source, query, args):
     return result
 
 
-def doctor():
-    return {'checked_at': now(), 'network_probed': False,
+def _safe_local_env():
+    allowed = {'SYSTEMROOT', 'WINDIR', 'LOCALAPPDATA', 'TEMP', 'TMP', 'PATH', 'SSL_CERT_FILE', 'SSL_CERT_DIR',
+               'HTTP_PROXY', 'HTTPS_PROXY', 'NO_PROXY', 'PLAYWRIGHT_BROWSERS_PATH'}
+    env = {key: value for key, value in os.environ.items() if key.upper() in allowed}
+    env.update(PYTHONIOENCODING='utf-8', PYTHONDONTWRITEBYTECODE='1')
+    return env
+
+
+def _path_check(value, *, directory=False):
+    if not value:
+        return {'configured': False, 'path_exists': False, 'path_kind': 'missing'}
+    path = Path(value).expanduser()
+    exists = path.is_dir() if directory else path.is_file()
+    return {'configured': True, 'path_exists': exists,
+            'path_kind': 'directory' if directory else 'file'}
+
+
+def _youtube_doctor(config):
+    value = runtime_config.runtime_path(config, 'youtube_transcript_python')
+    result = {'path': _path_check(value), 'runtime_ready': False,
+              'package': 'youtube-transcript-api', 'package_version': None}
+    if not value or not result['path']['path_exists']:
+        result['reason'] = 'runtime_not_configured_or_missing'
+        return result
+    try:
+        completed = subprocess.run(
+            [str(Path(value).expanduser()), '-I', '-B', '-c',
+             "import youtube_transcript_api; from youtube_transcript_api import YouTubeTranscriptApi; from importlib import metadata; print(metadata.version('youtube-transcript-api'))"],
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding='utf-8',
+            timeout=10, env=_safe_local_env(), check=False,
+            creationflags=getattr(subprocess, 'CREATE_NO_WINDOW', 0),
+        )
+        version = (completed.stdout or '').strip().splitlines()[-1] if completed.stdout else ''
+        if completed.returncode == 0 and re.fullmatch(r'[0-9A-Za-z.+_-]+', version):
+            result.update(runtime_ready=True, package_version=version)
+        else:
+            result['reason'] = 'package_import_failed'
+    except (OSError, subprocess.TimeoutExpired):
+        result['reason'] = 'runtime_probe_failed'
+    return result
+
+
+def _discourse_doctor():
+    return {'route_file': (Path(__file__).with_name('discourse.py')).is_file(),
+            'network_probed': False,
+            'note': 'Use explicit discourse URL for live public access; no network probe here'}
+
+
+def _batch_doctor():
+    return {'route_file': (Path(__file__).with_name('batch.py')).is_file(),
+            'network_probed': False,
+            'note': 'Task-local manifest only; no network probe here'}
+
+
+def _xiaohongshu_doctor(config, probe=False):
+    paths = runtime_config.reader_paths(config, 'xiaohongshu')
+    result = {
+        'paths': {
+            'session_root': _path_check(paths.get('session_root'), directory=True),
+            'adapter_path': _path_check(paths.get('adapter_path')),
+            'python_path': _path_check(paths.get('python_path')),
+        },
+        'path_exists_is_not_authorization': True,
+        'session_authorized': 'not_probed',
+        'network_probed': False,
+    }
+    if not all(item['path_exists'] for item in result['paths'].values()):
+        result['session_authorized'] = 'not_checked_missing_path'
+        return result
+    if not probe:
+        return result
+    command = [
+        str(Path(paths['python_path']).expanduser()),
+        str(Path(paths['adapter_path']).expanduser()),
+        '--session-root', str(Path(paths['session_root']).expanduser()),
+        'search', 'field-search doctor', '--limit', '1',
+    ]
+    result['network_probed'] = True
+    try:
+        completed = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                   encoding='utf-8', timeout=35, env=_safe_local_env(), check=False,
+                                   creationflags=getattr(subprocess, 'CREATE_NO_WINDOW', 0))
+        try:
+            payload = json.loads(completed.stdout)
+        except (TypeError, json.JSONDecodeError):
+            payload = {}
+        status = payload.get('status') if isinstance(payload, dict) else None
+        if completed.returncode == 0 and status == 'ok':
+            result['session_authorized'] = True
+        elif status in {'not_logged_in', 'unauthorized', 'session_expired'}:
+            result['session_authorized'] = False
+        else:
+            result['session_authorized'] = 'unknown'
+        if result['session_authorized'] is not True:
+            result['reason'] = 'adapter_probe_failed_or_not_authorized'
+    except subprocess.TimeoutExpired:
+        result['session_authorized'] = 'unknown'
+        result['reason'] = 'adapter_probe_timeout'
+    except OSError:
+        result['session_authorized'] = 'unknown'
+        result['reason'] = 'adapter_probe_process_error'
+    return result
+
+
+def doctor(config_path=None, source='all', probe_session=False):
+    config_result = runtime_config.load_config(config_path)
+    config = config_result.get('data') or {}
+    targeted = {}
+    selected = ('youtube', 'discourse', 'xiaohongshu', 'batch') if source == 'all' else (source,)
+    for name in selected:
+        if name == 'youtube':
+            targeted[name] = _youtube_doctor(config)
+        elif name == 'discourse':
+            targeted[name] = _discourse_doctor()
+        elif name == 'xiaohongshu':
+            targeted[name] = _xiaohongshu_doctor(config, probe=probe_session)
+        elif name == 'batch':
+            targeted[name] = _batch_doctor()
+    return {'checked_at': now(), 'network_probed': bool(probe_session),
             'public_helpers': list(PUBLIC), 'native_tools': 'discover in the calling host',
             'public_readers': list(integrated.READERS),
             'installed_integration_files': {name: (integrated.ROOT / 'integrations' / name / 'UPSTREAM_SKILL.md').is_file()
@@ -316,7 +435,9 @@ def doctor():
             'optional_env_present': {k: bool(os.getenv(k)) for k in
                 ('GITHUB_TOKEN', 'GH_TOKEN', 'X_BEARER_TOKEN', 'XAI_API_KEY',
                  'GEMINI_API_KEY', 'GOOGLE_API_KEY', 'FIELD_SEARCH_XAI_MODEL', 'FIELD_SEARCH_GEMINI_MODEL')},
-            'note': 'Presence only: does not prove credentials valid, entitlement or live connectivity. No credential stores read.'}
+            'config': runtime_config.redacted_config_summary(config_result),
+            'targeted_checks': targeted,
+            'note': 'Default checks are local and non-sensitive. Path existence does not prove an authorized session; --probe-session performs only the explicit Xiaohongshu read-only probe. No credential stores are read.'}
 
 
 def academic_edges(argv):
@@ -370,6 +491,15 @@ def main(argv=None):
     if argv and argv[0] == 'document':
         import document
         return document.main(argv[1:])
+    if argv and argv[0] == 'video':
+        import video
+        return video.main(argv[1:])
+    if argv and argv[0] == 'discourse':
+        import discourse
+        return discourse.main(argv[1:])
+    if argv and argv[0] == 'batch':
+        import batch
+        return batch.main(argv[1:])
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('command', choices=('doctor', 'search', 'read'))
     parser.add_argument('query', nargs='?')
@@ -390,6 +520,11 @@ def main(argv=None):
     parser.add_argument('--archive', action='store_true', help='X full archive; entitlement required')
     parser.add_argument('--cursor', help='X next_cursor from a previous result')
     parser.add_argument('--out', help='New JSON file; existing files are never overwritten')
+    parser.add_argument('--config', help='Local non-secret runtime config JSON for targeted doctor')
+    parser.add_argument('--source', choices=('all', 'youtube', 'discourse', 'xiaohongshu', 'batch'), default='all',
+                        help='Targeted doctor route; no network probe unless explicitly requested')
+    parser.add_argument('--probe-session', action='store_true',
+                        help='Explicitly probe the configured Xiaohongshu read-only session')
     args = parser.parse_args(argv)
     if not 1 <= args.limit <= 20 or not 1 <= args.page <= 50 or not 1 <= args.timeout <= 60:
         parser.error('limit 1..20, page 1..50 and timeout 1..60 required')
@@ -421,7 +556,9 @@ def main(argv=None):
     if args.out and Path(args.out).exists():
         parser.error('--out already exists; choose a new artifact path')
     if args.command == 'doctor':
-        result = doctor()
+        if args.probe_session and args.source not in ('all', 'xiaohongshu'):
+            parser.error('--probe-session is only valid for xiaohongshu doctor')
+        result = doctor(args.config, args.source, args.probe_session)
     else:
         query = Path(args.query_file).read_text(encoding='utf-8-sig') if args.query_file else args.query
         if not query or not query.strip():

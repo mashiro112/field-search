@@ -14,6 +14,8 @@ import sys
 from pathlib import Path
 from typing import Any, Sequence
 
+import runtime_config
+
 
 ROUTE = "field-search xiaohongshu"
 FEED_REF_RE = re.compile(r"^r22:[A-Za-z0-9._~%:-]{1,512}$")
@@ -75,6 +77,14 @@ def _add_runtime_options(parser: argparse.ArgumentParser, *, suppress_default: b
     )
 
 
+def _add_config_option(parser: argparse.ArgumentParser, *, suppress_default: bool = False) -> None:
+    parser.add_argument(
+        "--config",
+        default=argparse.SUPPRESS if suppress_default else None,
+        help="local non-secret runtime config; explicit paths override it",
+    )
+
+
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description=(
@@ -83,15 +93,18 @@ def _parser() -> argparse.ArgumentParser:
         )
     )
     _add_runtime_options(parser)
+    _add_config_option(parser)
     subparsers = parser.add_subparsers(dest="operation", required=True)
 
     search_parser = subparsers.add_parser("search", help="bounded read-only search")
     _add_runtime_options(search_parser, suppress_default=True)
+    _add_config_option(search_parser, suppress_default=True)
     search_parser.add_argument("keyword")
     search_parser.add_argument("--limit", type=int, default=1, help="returned-result target, 1..5")
 
     feed_parser = subparsers.add_parser("feed", help="read-only note detail and bounded comment loading")
     _add_runtime_options(feed_parser, suppress_default=True)
+    _add_config_option(feed_parser, suppress_default=True)
     feed_parser.add_argument(
         "feed_ref",
         help="opaque r22: reference returned by search; access tokens are not accepted",
@@ -196,10 +209,12 @@ def _load_result(stdout: bytes, operation: str, paths: Sequence[Path]) -> dict[s
     return result
 
 
-def _command(args: argparse.Namespace) -> tuple[list[str], Path, Path, Path]:
-    session_root = _path(args.session_root, "session_root", file=False)
-    adapter_path = _path(args.adapter_path, "adapter_path", file=True)
-    python_path = _path(args.python_path, "python_path", file=True)
+def _command(args: argparse.Namespace) -> tuple[list[str], Path, Path, Path, dict[str, Any]]:
+    config_result = runtime_config.load_config(getattr(args, "config", None))
+    configured = runtime_config.reader_paths(config_result.get("data") or {}, "xiaohongshu")
+    session_root = _path(args.session_root or configured.get("session_root"), "session_root", file=False)
+    adapter_path = _path(args.adapter_path or configured.get("adapter_path"), "adapter_path", file=True)
+    python_path = _path(args.python_path or configured.get("python_path"), "python_path", file=True)
     if args.operation == "search":
         limit = _bounded(args.limit, 1, 5, "limit")
         command = [
@@ -225,14 +240,14 @@ def _command(args: argparse.Namespace) -> tuple[list[str], Path, Path, Path]:
             "--max-comments",
             str(max_comments),
         ]
-    return command, session_root, adapter_path, python_path
+    return command, session_root, adapter_path, python_path, config_result
 
 
 def main(argv: Sequence[str] | None = None) -> int:
     parser = _parser()
     try:
         args = parser.parse_args(list(argv) if argv is not None else None)
-        command, session_root, adapter_path, python_path = _command(args)
+        command, session_root, adapter_path, python_path, config_result = _command(args)
         completed = subprocess.run(
             command,
             cwd=str(adapter_path.parent),
@@ -248,6 +263,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             "runtime": "explicit local --python-path/--adapter-path/--session-root",
             "write_scope": "read-only search/feed; adapter-local feed context only",
         }
+        result["config"] = runtime_config.redacted_config_summary(config_result)
         if completed.returncode != 0 and result.get("status") in SUCCESS_STATUSES:
             result["status"] = "worker_error"
             result["failure"] = {

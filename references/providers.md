@@ -152,3 +152,26 @@ python <skill-dir>/scripts/search.py read "https://example.com" --reader jina
 `integrated.py` is an internal adapter, invoked by the common entry point in an isolated Python subprocess. It passes no API keys, browser cookies or upstream global configuration and never starts paid fallbacks. Each integrated source gets the selected `--timeout` as its process deadline (up to ~1 second cleanup allowance). At most three selected sources run concurrently; choosing many sources can create multiple waves, so this is not a whole-research deadline. Normally select two or three relevant lanes. `--page` is supported here for FindARepo/arXiv/Stack Overflow; other integrated routes reject pages beyond 1. `--sort` affects legacy HN/X helpers only as documented; new collectors use upstream relevance. Requested `--since` on unsupported integrated sources is explicitly reported as unapplied.
 
 `ok` means a record was retrieved, not that an article was read or an experience proved. Read `kind`, `source_read`, `scope`, and truncation flags. Do not render returned HTML as active code. Keep original records expandable and send only decisive evidence to a calling agent. The integration manifest records installation, not ongoing live health; probe only the task-relevant routes.
+
+## R24 explicit routes
+
+These commands are opt-in and are not added to ordinary source fan-out. See
+[r24-routes.md](r24-routes.md) for the complete schemas and failure semantics.
+
+```text
+python <skill-dir>/scripts/search.py video "https://www.youtube.com/watch?v=<id>" --config <local-config.json> --language en --find "term"
+python <skill-dir>/scripts/search.py discourse "https://forum.example.org/t/topic/123" --post-limit 50 --request-budget 6 --batch-size 20
+python <skill-dir>/scripts/search.py doctor --source youtube --config <local-config.json>
+python <skill-dir>/scripts/search.py doctor --source xiaohongshu --probe-session --config <local-config.json>
+python <skill-dir>/scripts/search.py batch create <items.json> --out <new-manifest.json>
+python <skill-dir>/scripts/search.py batch run <manifest.json> --out <new-result.json>
+```
+
+`video` uses only the configured isolated `youtube-transcript-api` runtime and
+returns caption segments with timestamps; no media download, ASR, cookies or
+paid fallback. `discourse` follows public `post_stream.stream` IDs in bounded
+post batches rather than assuming the first topic response is complete.
+`doctor` separates path/runtime checks from the explicit XHS session probe.
+`batch` is task-local: successful same-key items reuse their stored output,
+partial/error/unavailable items are retried, and `--refresh`/`--refresh-id`
+force a new read without overwriting the input manifest.
