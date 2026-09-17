@@ -2,7 +2,7 @@
 
 Snapshot date: 2026-09-17. For precise synchronization, cite the commit SHA of the version you read.
 
-FS development is published at substantive checkpoints and handoffs under the owner's standing instruction. Read the current default branch and report the commit actually fetched. The latest published checkpoint remains documentation complete / real academic trial pending; FS03's setup conversation is being closed and its decisions are retained in the linked files. Future source or research changes should update this entrypoint and the relevant records, following [the development publication rules](AGENTS.md).
+FS development is published at substantive checkpoints and handoffs under the owner's standing instruction. Read the current default branch and report the commit actually fetched. The latest general-search checkpoint is a [feature ROI review](docs/reviews/2026-09-17-feature-roi.md): timestamped video transcripts and structured public forum reading are proposed, with no new candidate installed or runtime-validated. FS03 remains documentation complete / real academic trial pending; its decisions are retained in the linked files. Future source or research changes should update this entrypoint and the relevant records, following [the development publication rules](AGENTS.md).
 
 Field Search aims to find mature reusable solutions, practical experience, relevant counterexamples, and decisive source material. It adapts effort to the information gap. Source count and report length are not success metrics.
 
