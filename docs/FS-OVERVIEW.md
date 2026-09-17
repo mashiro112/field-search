@@ -2,9 +2,9 @@
 
 更新：2026-09-17。此页连接当前源码、历史证据与新科研流程；状态以各层的实际证据范围区分。
 
-当前进行中：[R26 读取现成 Gemini Deep Research 报告](reviews/R26-GEMINI-REPORT-IMPORT.md)。真实 Docs→Markdown 导出已成功并与网页对照正文及表格；本地导入、限量预览和离线复用入口正在实施，尚未验收。此阶段不包含自动启动或监控研究，也不把 grounded search 当作 Deep Research。[路线比较](reviews/GOOGLE-DEEP-RESEARCH-OPTIONS.md)保留为选型背景。
+当前最新：[R26 读取现成 Gemini Deep Research 报告](reviews/R26-GEMINI-REPORT-IMPORT.md)。真实 Docs→Markdown 导出已成功并与网页对照正文及表格；本地原样导入、限量预览、离线分页/查找及复用已安装并完成必要验证，独立审查的输出长度与目录计数问题已修正。172 文件源码清单、索引与指令合集同步。此阶段不包含自动启动或监控研究，也不把 grounded search 当作 Deep Research。[路线比较](reviews/GOOGLE-DEEP-RESEARCH-OPTIONS.md)保留为选型背景。
 
-当前最新：[R25 Bilibili 字幕能力已安装并通过独立验收](reviews/R25-BILIBILI.md)，在已有 video 入口增加 B 站字幕、分 P、时间定位、关键词查找及批量复用。170 文件源码清单、索引与指令合集已同步，会话和完整测试字幕不公开。科研 FS03 状态保持独立。
+此前已交付：[R25 Bilibili 字幕能力已安装并通过独立验收](reviews/R25-BILIBILI.md)，在已有 video 入口增加 B 站字幕、分 P、时间定位、关键词查找及批量复用。会话和完整测试字幕不公开。科研 FS03 状态保持独立。
 
 [R24 已验收能力](reviews/R24-RESULTS.md)包括 YouTube、Discourse、本机运行配置/诊断及任务内批量复用/刷新。R25 在此基础上扩展；最终 B 站正例为来源一致的 1790 段字幕，初版 705/235/267 段错配结果已撤回，不作为验收证据。短链与元数据限制见 R25 结果说明。
 

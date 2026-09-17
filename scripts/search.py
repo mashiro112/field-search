@@ -504,6 +504,9 @@ def main(argv=None):
         return xiaohongshu.main(argv[1:])
     if argv and argv[0] == 'academic-edges':
         return academic_edges(argv[1:])
+    if argv and argv[0] == 'report':
+        import report
+        return report.main(argv[1:])
     if argv and argv[0] == 'recent':
         import recent
         return recent.main(argv[1:])

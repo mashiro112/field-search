@@ -1,7 +1,7 @@
 {
   "snapshot_date": "2026-09-17",
   "description": "Exact installed source snapshot; caches and runtime artifacts excluded.",
-  "file_count": 170,
+  "file_count": 172,
   "files": [
     {
       "path": "agents/openai.yaml",
@@ -749,6 +749,11 @@
       "sha256": "87b24acb8bca9b66d13a947c05deabb6160d26c8767ae1ae99eeb098b55d19fc"
     },
     {
+      "path": "references/gemini-report.md",
+      "bytes": 3889,
+      "sha256": "2d723865f32c279a6d7fbf682b065eed89da91fbd8e107ae3b86f99b90071c2f"
+    },
+    {
       "path": "references/integration-map.md",
       "bytes": 9033,
       "sha256": "cfdb468b30f64781c7d39eaf81baef9662f31ff95ce467d277bb82c12762ca67"
@@ -819,14 +824,19 @@
       "sha256": "8275365b1c868aacbf44bcfdc1ccc38942530a808fe66cab80199b310961d927"
     },
     {
+      "path": "scripts/report.py",
+      "bytes": 15790,
+      "sha256": "a93111f4e8a50b35a45450559bb352eab27d1d632d6b3bc3689f130d81d1f4f2"
+    },
+    {
       "path": "scripts/runtime_config.py",
       "bytes": 5528,
       "sha256": "363f8562cdbe70dc5de3efbe7ff783a4250fded7ae975eb00a34ee2789385195"
     },
     {
       "path": "scripts/search.py",
-      "bytes": 33027,
-      "sha256": "dbf178d4d27cb696732040a63241f4a5255c2379f0546988e61ba6c597c0c5fb"
+      "bytes": 33123,
+      "sha256": "c29146e3fa3ee5f419216ee5cf89525a88995bc8692ffdb3738ff279235fde06"
     },
     {
       "path": "scripts/video_worker.py",
@@ -845,8 +855,8 @@
     },
     {
       "path": "SKILL.md",
-      "bytes": 18146,
-      "sha256": "abfd438422b1eeef078b68ab53ae7bf38b6a4da5b03114f0bf6f1405c967214e"
+      "bytes": 19199,
+      "sha256": "b9164f7a6cad83aac224f853a0756f12d9edb485ad58a3be366c2bc94be6da15"
     },
     {
       "path": "THIRD_PARTY_NOTICES/Crawl4AI-LICENSE.txt",
