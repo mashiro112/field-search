@@ -149,6 +149,7 @@ Every published original source file is listed below. Hashes refer to exact sour
 - [integrations/supersearch-wechat/scripts/search.py](../integrations/supersearch-wechat/scripts/search.py) — 6615 bytes; SHA256 `00b417e4c40ce437d435645fe686a9082c72baa325a36a2277aa219d9521f645`
 - [integrations/supersearch-wechat/UPSTREAM_SKILL.md](../integrations/supersearch-wechat/UPSTREAM_SKILL.md) — 1579 bytes; SHA256 `7b3f0c9bc0a93b1646033d7af113c3ca557f870e891399d52f828153bf63e81b`
 - [integrations/websearch-components/LICENSE](../integrations/websearch-components/LICENSE) — 1091 bytes; SHA256 `2db9de29513f0b2199697a836e7cc93b6c14b0d6e20a24aa47b93017b0ccd60b`
+- [references/chatgpt-deep-research.md](../references/chatgpt-deep-research.md) — 4589 bytes; SHA256 `86ee1744f819f70e46008f65e329e4e5b5349e5e6b440e8965d3062fce80f7ed`
 - [references/crawl4ai-runtime-r4.md](../references/crawl4ai-runtime-r4.md) — 1987 bytes; SHA256 `1e572af36ea11661da1aa51e36874afc0b3e6f9309c19955def53e3dfd164caa`
 - [references/evidence.md](../references/evidence.md) — 8699 bytes; SHA256 `87b24acb8bca9b66d13a947c05deabb6160d26c8767ae1ae99eeb098b55d19fc`
 - [references/gemini-deep-research.md](../references/gemini-deep-research.md) — 3810 bytes; SHA256 `8c99f189de0a6e891028a39287c067b97aa49c6ef981c2fa22617ec354edce95`
@@ -173,5 +174,5 @@ Every published original source file is listed below. Hashes refer to exact sour
 - [scripts/video_worker.py](../scripts/video_worker.py) — 7119 bytes; SHA256 `65792e667aed2a6e1c1aa26202b85fe36a2391cc16a5fe9346a7d89ce17523da`
 - [scripts/video.py](../scripts/video.py) — 10471 bytes; SHA256 `b936ee62668ce78a747f47e22ab5f78e2fff0859c38d61d947edb902a34d8ccd`
 - [scripts/xiaohongshu.py](../scripts/xiaohongshu.py) — 10380 bytes; SHA256 `8cf4732ba0ed4032cb5634bf323ea671c76881921f2624a31d4331e0f468e994`
-- [SKILL.md](../SKILL.md) — 20323 bytes; SHA256 `6515799da198e44128c285893a9b74e2249454c4c1bf8ad3145a69798a788213`
+- [SKILL.md](../SKILL.md) — 20913 bytes; SHA256 `0208f03aad0d5ed096838381d0468d41dc911fac7501cd246843d134908d060b`
 - [THIRD_PARTY_NOTICES/Crawl4AI-LICENSE.txt](../THIRD_PARTY_NOTICES/Crawl4AI-LICENSE.txt) — 9998 bytes; SHA256 `193fe32704bee15cd74f5153e569cdf830e26445e19798a55daee32da40758aa`

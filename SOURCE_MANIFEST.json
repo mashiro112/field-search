@@ -1,7 +1,7 @@
 {
-  "snapshot_date": "2026-09-17",
+  "snapshot_date": "2026-09-18",
   "description": "Exact installed source snapshot; caches and runtime artifacts excluded.",
-  "file_count": 173,
+  "file_count": 174,
   "files": [
     {
       "path": "agents/openai.yaml",
@@ -739,6 +739,11 @@
       "sha256": "2db9de29513f0b2199697a836e7cc93b6c14b0d6e20a24aa47b93017b0ccd60b"
     },
     {
+      "path": "references/chatgpt-deep-research.md",
+      "bytes": 4589,
+      "sha256": "86ee1744f819f70e46008f65e329e4e5b5349e5e6b440e8965d3062fce80f7ed"
+    },
+    {
       "path": "references/crawl4ai-runtime-r4.md",
       "bytes": 1987,
       "sha256": "1e572af36ea11661da1aa51e36874afc0b3e6f9309c19955def53e3dfd164caa"
@@ -860,8 +865,8 @@
     },
     {
       "path": "SKILL.md",
-      "bytes": 20323,
-      "sha256": "6515799da198e44128c285893a9b74e2249454c4c1bf8ad3145a69798a788213"
+      "bytes": 20913,
+      "sha256": "0208f03aad0d5ed096838381d0468d41dc911fac7501cd246843d134908d060b"
     },
     {
       "path": "THIRD_PARTY_NOTICES/Crawl4AI-LICENSE.txt",
