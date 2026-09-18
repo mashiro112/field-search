@@ -1,6 +1,7 @@
 # R28 ChatGPT web research and non-paid X search
 
-Date: 2026-09-18. Status: implementation/acceptance in progress.
+Date: 2026-09-18. Status: partial integration; browser start/completion/reading
+verified, automatic local report transfer not accepted.
 
 ## Decision and reusable candidates
 
@@ -12,7 +13,7 @@ R26 local report cache; no new service is installed for this trial.
 | Candidate | Evidence and decision |
 |---|---|
 | [andylizf/deep-research-skill](https://github.com/andylizf/deep-research-skill) | Real web Deep Research Skill; README requires macOS/web-plane and notes opaque report citations. Reuse plan/start/export workflow knowledge; not directly installable as documented on this Windows host. |
-| [OpenCLI ChatGPT](https://github.com/jackwener/OpenCLI/blob/main/docs/adapters/browser/chatgpt.md) | Source exposes `deep-research-result`, including report, sources and progress. Uses internal conversation payloads and a browser bridge. Useful candidate, not locally tested or proof of full submit/start automation. |
+| [OpenCLI ChatGPT](https://github.com/jackwener/OpenCLI/blob/main/docs/adapters/browser/chatgpt.md) | Source exposes `ask --deep-research` and `deep-research-result`, including report, sources and progress. Uses internal conversation payloads and a browser bridge. Useful candidate, not locally tested or proof of full submit/start automation. |
 | [Microck/chatgpt-webui-mcp](https://github.com/Microck/chatgpt-webui-mcp) | Repository archived June 1, 2026; separate browser service and session-token setup. Not selected for the minimal-maintenance route. |
 | [OpenCLI X search](https://github.com/jackwener/OpenCLI/blob/main/clis/twitter/search.js) | Actual search implementation supports Top/Latest and author/media filters. It reads a session CSRF cookie and calls internal SearchTimeline GraphQL inside the browser. No paid developer API, but not pure DOM interaction or no-cookie access. Uninstalled/unverified locally. |
 | [bird](https://github.com/jawond/bird) | Cookie-authenticated internal GraphQL search, replies and threads. README documents macOS credential sourcing and rate-limit risk. It is a candidate, not the current installed FS direct-search backend. |
@@ -48,6 +49,37 @@ evidence, not a fresh test in this round. If the owner means strictly UI-only by
   It and private report content are excluded from publication. There has been
   one submission, no duplicate and no paid API substitution.
 
-Pending: completed report extraction, body/source transfer checks, R26 reuse
-and final end-to-end acceptance. The new reference explicitly preserves this
-in-progress boundary. No independent reviewer has accepted this browser trial.
+## Completion and transfer findings
+
+The same research task completed; the UI reported 12 minutes and 15 sources.
+Its rendered report had 18 headings and four tables. The agent read the decision
+summary, comparison, maintenance and proposed-path sections, and inspected the
+final limitations/source table. This is actual report reading, not treating the
+initial acknowledgement as the research answer.
+
+Official Markdown export returned no retrievable local file in the expected
+download location. A bounded second attempt waiting for the download event timed
+out. Official Copy Contents returned an empty browser clipboard. The current
+native browser can read the rendered nested iframe, but this trial did not
+materialize a complete report file. Its DOM contained numbered citation controls
+and textual URLs in a source table, with no ordinary anchor links. Paragraph-level
+citation-to-URL fidelity and R26 file caching are therefore NOT accepted.
+
+The reference provides bounded DOM reading as an explicitly limited fallback,
+preserves the original conversation, and avoids repeated exports or rerunning
+research. It does not claim a full report cache, token-savings percentage or a
+standalone automation service. No independent reviewer accepted this trial.
+
+The generated report's no-install recommendation reflects the trial brief, not
+a permanent owner constraint. Dependencies remain candidates where worthwhile.
+Its useful additional lead was checked against primary sources:
+[OpenCLI ask.js](https://github.com/jackwener/OpenCLI/blob/main/clis/chatgpt/ask.js)
+really has separate Deep Research/Web Search flags, while
+[issue 2435](https://github.com/jackwener/OpenCLI/issues/2435) reports a Windows 11
+frontend change breaking v1.8.7 history/ask. That issue is not proof that all
+current versions fail. The full generated report and session identifiers remain
+private; only these shareable findings are published.
+
+Next acceptance target: a supported way to transfer the existing completed report
+with body and usable source mappings. Do not spend another research task merely
+to retest export. X-native search candidates remain uninstalled.
