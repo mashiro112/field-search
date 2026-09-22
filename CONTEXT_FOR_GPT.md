@@ -1,6 +1,8 @@
 # Shared context for ChatGPT and Codex
 
-Snapshot date: 2026-09-18. For precise synchronization, cite the commit SHA of the version you read.
+Snapshot date: 2026-09-23. For precise synchronization, cite the commit SHA of the version you read.
+
+Current work: [R29 repository content and RSS/Atom](docs/reviews/R29-REUSABLE-ROUTES.md) is planned and under implementation; neither route is accepted yet. It reuses Repomix and feedparser rather than adding a research framework.
 
 FS development is published at substantive checkpoints and handoffs under the owner's standing instruction. Read the current default branch and report the commit actually fetched. The latest partial-integration checkpoint is [R28 ChatGPT web Deep Research and non-paid X search](docs/reviews/R28-CHATGPT-WEB-RESEARCH.md): product selection, plan/start, completion and bounded report reading are verified; automatic local export/caching remains unavailable in the tested browser. X keyless discovery/oEmbed were rerun with explicit truncation limits. The latest completed delivery is [R27 automatic Gemini Deep Research through the native browser](docs/reviews/R27-GEMINI-DEEP-RESEARCH.md), verified on one actual task from product selection and plan/start through official Docs export and [R26 local report reuse](docs/reviews/R26-GEMINI-REPORT-IMPORT.md). The current source snapshot has 174 files. [R25 Bilibili captions](docs/reviews/R25-BILIBILI.md) and [R24 YouTube, Discourse, runtime configuration and batch capabilities](docs/reviews/R24-RESULTS.md) remain available. Acceptance covers specified real cases and counterexamples, not universal platform coverage or measured token savings. FS03 remains documentation complete / real academic trial pending. Follow [the development publication rules](AGENTS.md) for subsequent updates.
 
