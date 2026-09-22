@@ -495,6 +495,46 @@ def academic_edges(argv):
     return 0 if result.get('status') == 'ok' else 2
 
 
+def _run_document(command, config_path=None):
+    """Use the explicitly configured optional document dependency runtime."""
+    import runtime_config
+    import document
+    # Crawl4AI retains its separate explicit interpreter/browser contract.
+    if '--reader=crawl4ai' in command or any(
+            token == '--reader' and index + 1 < len(command) and command[index + 1] == 'crawl4ai'
+            for index, token in enumerate(command)):
+        return document.main(command)
+    config = runtime_config.load_config(config_path)
+    reason = None
+    if config.get('status') in ('invalid', 'unreadable'):
+        reason = 'document_runtime_config_invalid'
+    configured = runtime_config.runtime_path(config.get('data') or {}, 'document')
+    if reason is None and not configured:
+        return document.main(command)
+    runtime = Path(configured).expanduser() if configured else None
+    if reason is None and not runtime.is_file():
+        reason = 'document_runtime_path_missing'
+    if reason is None:
+        try:
+            completed = subprocess.run(
+                [str(runtime), '-X', 'utf8', '-B', str(Path(__file__).with_name('document.py')), *command],
+                stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=_safe_local_env(),
+                stdin=subprocess.DEVNULL, timeout=65, check=False,
+                creationflags=getattr(subprocess, 'CREATE_NO_WINDOW', 0))
+            sys.stdout.write(completed.stdout.decode('utf-8', errors='replace'))
+            if completed.stdout:
+                return completed.returncode
+            reason = 'document_runtime_no_output'
+        except subprocess.TimeoutExpired:
+            reason = 'document_runtime_deadline'
+        except OSError:
+            reason = 'document_runtime_start_failed'
+    network_used = None if reason in ('document_runtime_deadline', 'document_runtime_no_output') else False
+    print(json.dumps({'status': 'unavailable', 'reason': reason, 'network_used': network_used,
+                      'config': runtime_config.redacted_config_summary(config)}, ensure_ascii=False))
+    return 2
+
+
 def main(argv=None):
     argv = list(sys.argv[1:] if argv is None else argv)
     # One public helper entry; delegate to the existing engines without copying
@@ -513,12 +553,17 @@ def main(argv=None):
     if argv and argv[0] == 'feed':
         import feed
         return feed.main(argv[1:])
+    if argv and argv[0] == 'discover':
+        import discover
+        return discover.main(argv[1:])
+    if argv and argv[0] == 'convert':
+        import material
+        return material.main(argv[1:])
     if argv and argv[0] == 'recent':
         import recent
         return recent.main(argv[1:])
     if argv and argv[0] == 'document':
-        import document
-        return document.main(argv[1:])
+        return _run_document(argv[1:])
     if argv and argv[0] == 'video':
         import video
         return video.main(argv[1:])
@@ -617,7 +662,7 @@ def main(argv=None):
             command = ['fetch', query, '--page', str(args.page), '--timeout', str(args.timeout)]
             if args.out:
                 command += ['--out', args.out]
-            return document.main(command)
+            return _run_document(command, args.config)
         sources = ['thread'] if args.command == 'read' else list(dict.fromkeys(args.sources.split(',')))
         if args.command == 'search' and any(s not in PUBLIC + EXTERNAL for s in sources):
             parser.error('unknown source; choose ' + ','.join(PUBLIC + EXTERNAL))

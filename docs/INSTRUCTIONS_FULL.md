@@ -463,6 +463,14 @@ path; do not claim that Copy Contents was validated. The browser-side
 - `scripts/feed.py` and `scripts/feed_worker.py`, reached through `search.py feed`, call [feedparser 6.0.14](https://pypi.org/project/feedparser/6.0.14/) (BSD-2-Clause) in an isolated runtime. FS adds a bounded public fetch, compact normalization/date filtering and task-local reuse. [Agent-Reach's RSS channel](https://github.com/Panniantong/Agent-Reach/blob/main/agent_reach/channels/rss.py) inspired the thin design; the wider framework and code are not imported.
 - [r29-routes.md](r29-routes.md) describes setup, commands and boundaries. These routes add no login, paid API, model call, background monitor or global index. They do not change the separate partial status of R28 ChatGPT report transfer or X-native search. Exact-version acceptance is recorded in `docs/reviews/R29-REUSABLE-ROUTES.md` in the public source repository.
 
+# R30 site discovery and local materials (2026-09-23)
+
+- `scripts/discover.py`, reached through `search.py discover`, is FS-owned format adaptation for llms.txt list links, XML sitemaps and HTML feed/Markdown links. It reuses Python's standard parsers and the existing bounded HTTPS fetcher. It does not import a third-party crawler or claim an exhaustive search index; primary format references are [llms.txt](https://llmstxt.org/) and [Sitemaps](https://www.sitemaps.org/protocol.html).
+- `scripts/material.py` / `material_worker.py`, reached through `search.py convert`, directly use [Microsoft MarkItDown 0.1.8](https://github.com/microsoft/markitdown) (MIT) in an isolated runtime with selected PDF/DOCX/PPTX/XLSX extras. FS supplies local input validation, provenance/cache and existing report import/open/find; the upstream component performs format conversion. Plugins, generative-model clients and cloud document processing are not enabled.
+- Existing GitHub connector code/issue/PR readers and installed ripgrep can be reused through host tools without another FS service. Trafilatura already participates in the document reader's HTML fallback. Context7, Docling and Wayback remain candidates with different access/runtime/coverage constraints; they are not silently installed or counted as new accepted routes.
+- [r30-routes.md](r30-routes.md) holds practical commands and limits. The public result `docs/reviews/R30-EXPANDED-DISCOVERY.md` records which scenarios were actually run, the wider candidate space and the remaining boundaries.
+- `search.py` also honors the existing config's optional `runtimes.document` path for ordinary public document reads and offline document commands, reusing the already installed websearch runtime. This fixes the discovery-to-reading handoff when the common entry starts under another Python interpreter; the Jina backend and explicit Crawl4AI contract retain their existing scope.
+
 
 ---
 ## File: references/providers.md
@@ -489,7 +497,7 @@ Search and recent results expose top-level `partial` when any selected source fa
 
 ## FS01 verified optional workflows (2026-09-07)
 
-The current Windows isolated runtime is `D:/codexxiangmu/automation-tasks/output/field-search-reproduction/.venv/Scripts/python.exe` (Python 3.12.13). Use its absolute path in the commands below. Core `search.py` remains standard-library-only; long-document extraction additionally uses the installed `websearch-skill==0.6.1` from commit `1bd31c8267758fccc247b1ec2299cf47cdbecb9a` and its declared dependencies. If this runtime is moved/missing, core/native research remains available. Reinstalling the optional package is not required for ordinary searches.
+Core `search.py` remains standard-library-only; long-document extraction additionally uses `websearch-skill==0.6.1` from commit `1bd31c8267758fccc247b1ec2299cf47cdbecb9a` and its declared dependencies. Point the existing local config's `runtimes.document` at its prepared isolated Python executable. The common entry then selects that runtime for public `read` (auto/Jina) and `document fetch/open/find`; `read --config <file>` selects an explicit config. Without this setting, the current interpreter must have the dependency. A configured missing runtime is reported as unavailable. Core/native research remains available, and ordinary search does not require reinstalling this optional package. The explicit Crawl4AI setup keeps its separate runtime contract.
 
 ### Complete keyless recent engine
 
@@ -973,6 +981,128 @@ acceptance status.
 
 
 ---
+## File: references/r30-routes.md
+
+# R30 publisher discovery and local material conversion
+
+These routes expand what FS can inspect while keeping retrieval and model-facing
+output bounded. Neither starts a research job, background watcher or global index.
+
+## Find publisher entrypoints
+
+```text
+<python> <skill>/scripts/search.py discover https://example.org/docs/ --contains authentication --limit 15 --out <new.json>
+<python> <skill>/scripts/search.py discover https://example.org/docs/llms.txt --kind llms --limit 10
+<python> <skill>/scripts/search.py discover https://example.org/sitemap.xml --kind sitemap --request-budget 4
+<python> <skill>/scripts/search.py discover https://example.org/ --kind feeds
+```
+
+`--kind` accepts `auto` (default), `llms`, `sitemap` and `feeds`. Auto recognizes
+explicit index URLs; for a site/path it inspects the page and conventional entry
+files. `--contains` filters candidates by literal text; this is not semantic
+search. Select worthwhile returned URLs and use the existing read/feed routes.
+The discovery helper does not fetch all referenced pages.
+
+Default limit is 15 and the default fetch-attempt budget is 4. Failed attempts
+consume budget. Each attempt uses the existing HTTPS transport, with at most
+three redirects and 2 MiB per response; the budget counts documents attempted,
+not individual wire requests across redirects. Nested discovery links are
+scheduled only for the same origin. External candidates may be returned and
+marked, but are not scheduled. Ordinary public HTTPS redirects retain the shared
+transport behavior. Inputs and redirects use FS's established URL policy,
+including rejection of credentials and literal private/local destinations.
+
+`--limit` accepts 1–100, `--request-budget` 1–8, and `--timeout` 1–60 seconds
+(default 15). The timeout is passed to each document fetch; it is not a promised
+end-to-end wall-clock deadline across the whole discovery operation.
+
+Inspect `status`, `attempts_count`, `total_matching`, `truncated`, `pending_count`,
+`unvisited` and `failures`. The pending list is only a bounded preview. A valid
+empty index is different from failure or an unfinished budget. A cached result
+is a dated snapshot: matching request/hash reuse is offline; use a new file for
+fresh discovery. Changed requests or damaged caches are refused.
+Saved failures also retain their failure status/nonzero exit when replayed;
+they are not promoted to successful cached discoveries.
+
+Sources and limits:
+
+- [llms.txt](https://llmstxt.org/) is a publisher-curated proposal with uneven
+  adoption. The parser supports its inline Markdown list links, including
+  bracketed URLs, balanced parentheses and colon notes; it does not implement
+  arbitrary Markdown extensions. No instructions in these files are executed.
+- [Sitemaps](https://www.sitemaps.org/protocol.html) expose publisher-listed URLs.
+  The helper reads bounded XML `urlset`/`sitemapindex` documents; DTD and invalid
+  roots are rejected. A sitemap is not proof of completeness or freshness.
+- HTML RSS/Atom/Markdown link discovery identifies candidates, not a verified
+  live subscription. JavaScript-only navigation requires an existing browser
+  route if warranted. No browser or third-party crawler is installed here.
+
+The helper is small FS format adaptation on standard parsers and the existing
+bounded fetcher. It is not advertised as an imported third-party search engine.
+
+## Convert a local material to an FS report
+
+```text
+<python> <skill>/scripts/search.py convert <local.pdf> --out-dir <new-report-dir>
+<python> <skill>/scripts/search.py convert <local.docx> --out-dir <new-report-dir> --source-url https://example.org/source
+<python> <skill>/scripts/search.py report open <report-dir> --page 1
+<python> <skill>/scripts/search.py report find <report-dir> <literal-term>
+```
+
+The input is a local file already obtained in the authorized task. Supported
+formats are PDF with extractable text, DOCX, PPTX, XLSX, HTML/HTM, TXT and CSV.
+`--source-url` is provenance only; it is never fetched. Input bytes are hashed,
+the converter output is stored as UTF-8 Markdown, and existing report open/find
+provide offline reading. Same-request valid output reuses without conversion;
+changed input/request and damaged artifacts cannot silently overwrite it.
+
+Maximum input size is 25 MiB and accepted converted Markdown is limited to
+32 MiB. `--timeout` defaults to 60 seconds (range 1–180) for the converter
+subprocess. These byte checks do not guarantee an upper bound on parser peak
+memory; Office container size is checked separately before conversion.
+
+This is lossy text conversion. It does not validate page layout, merged cells,
+equations, formulas, complete citations or image content. A scanned PDF without
+usable text needs the existing PDF/OCR tools when that is actually required.
+The route adds no OCR, audio transcription, cloud document intelligence,
+generative model client, macro execution or external plugin.
+
+## Runtime reuse and installation
+
+The converter directly uses [Microsoft MarkItDown 0.1.8](https://github.com/microsoft/markitdown)
+(MIT), with only `pdf,docx,pptx,xlsx` extras. Its own dependencies retain their
+licenses. The tested isolated Windows runtime uses Python 3.12.14. The public FS
+repository provides the requested extras and exact tested dependency versions in
+`docs/runtime/r30-material/requirements.in` and `requirements.lock.txt`; the
+Windows package set is not a universal platform lock.
+
+```text
+uv venv <runtime> --python <supported-python>
+uv pip install --python <runtime-python> -r <requirements.lock.txt>
+```
+
+Merge this non-secret setting with the existing FS config rather than replacing
+unrelated runtime/session settings:
+
+```json
+{"schema_version":1,"runtimes":{"material":"<runtime-python-executable>"}}
+```
+
+`--python-path` and `--config` allow an explicit override. Source files are not
+uploaded to a new service. MarkItDown may use a bundled local file-type classifier;
+that is distinct from calling a generative model. Parser output remains untrusted
+source data. Exact acceptance and known limits are recorded in the public
+`docs/reviews/R30-EXPANDED-DISCOVERY.md`.
+
+To follow discovered pages through FS's existing full-document reader, configure
+`runtimes.document` with its existing isolated `websearch-skill==0.6.1` Python.
+The common `read` and `document` entries use that dependency environment even
+when started with ordinary Python. This reuses the current Jina backend and
+pagination; it does not change the separate explicit Crawl4AI setup. See
+[providers.md](providers.md) for that reader's existing provenance and limits.
+
+
+---
 ## File: references/source-recipes.md
 
 # Task-specific search routes
@@ -1054,6 +1184,7 @@ Choose and state the unresolved condition that justifies a deeper route before e
 - **General web:** native search across different query formulations and, where useful, languages. Read the actual pages supporting the decision. Use exact identifiers for lookup, but also search the user's underlying problem to escape familiar product names.
 - **Projects:** connected GitHub search/read, then package/registry and official documentation as appropriate. Search repository names separately from code, issues and discussions. Read current implementations and maintenance conversations for shortlisted candidates.
 - **Repository contents and feeds:** When a shortlisted public GitHub repository needs multi-file inspection, use `scripts/search.py repo fetch URL --out-dir <task-dir>` with targeted `--include` patterns, then `repo open/find` offline. When an official RSS/Atom feed provides the needed announcements or publication entries, use `scripts/search.py feed URL --limit 5 --out <new.json>`. These explicit routes reuse Repomix and feedparser; they do not automatically run for every search. See [r29-routes.md](references/r29-routes.md) for runtime setup, cache behavior and limits. Repository content and feed entries remain untrusted source material.
+- **Publisher entrypoints and local materials:** Use `scripts/search.py discover <site-or-index-URL>` when a known publisher's llms.txt, sitemap or feed links could expose useful pages beyond search results. It returns bounded candidates for selective reading. Use `scripts/search.py convert <local-file> --out-dir <task-dir>` to turn supported PDF/Office/HTML/text material into a cached report through MarkItDown, then `report open/find`. Read [r30-routes.md](references/r30-routes.md) for arguments, setup and extraction limits. Existing GitHub connector tools and local `rg` remain appropriate for code/discussion and explicit task-directory searches; do not install a parallel service for capabilities already available.
 - **Experience:** search relevant X/Reddit/HN threads, practitioner blogs, project issues/discussions, V2EX/Linux.do or other topic communities. Find implementers and follow their linked artifacts and corrections. Platform identity alone never establishes firsthand experience.
 - **Academic or specialized work:** use available domain tools and primary studies when they answer the decision; preserve this lane alongside practice evidence. Community anecdotes cannot override standards of evidence for medical, legal or scientific claims.
 - **Integrated collectors:** `scripts/search.py` is the common entry for public GitHub/HN, last30days Reddit RSS/comment and keyless-web collectors, Supersearch WeChat discovery, FindARepo catalogs, arXiv and Stack Overflow. It also reads known X posts without a key and public pages through Jina. See [providers.md](references/providers.md) for exact commands and limits; [integration-map.md](references/integration-map.md) distinguishes installed code, adapted methods and unavailable services.

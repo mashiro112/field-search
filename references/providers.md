@@ -20,7 +20,7 @@ Search and recent results expose top-level `partial` when any selected source fa
 
 ## FS01 verified optional workflows (2026-09-07)
 
-The current Windows isolated runtime is `D:/codexxiangmu/automation-tasks/output/field-search-reproduction/.venv/Scripts/python.exe` (Python 3.12.13). Use its absolute path in the commands below. Core `search.py` remains standard-library-only; long-document extraction additionally uses the installed `websearch-skill==0.6.1` from commit `1bd31c8267758fccc247b1ec2299cf47cdbecb9a` and its declared dependencies. If this runtime is moved/missing, core/native research remains available. Reinstalling the optional package is not required for ordinary searches.
+Core `search.py` remains standard-library-only; long-document extraction additionally uses `websearch-skill==0.6.1` from commit `1bd31c8267758fccc247b1ec2299cf47cdbecb9a` and its declared dependencies. Point the existing local config's `runtimes.document` at its prepared isolated Python executable. The common entry then selects that runtime for public `read` (auto/Jina) and `document fetch/open/find`; `read --config <file>` selects an explicit config. Without this setting, the current interpreter must have the dependency. A configured missing runtime is reported as unavailable. Core/native research remains available, and ordinary search does not require reinstalling this optional package. The explicit Crawl4AI setup keeps its separate runtime contract.
 
 ### Complete keyless recent engine
 
