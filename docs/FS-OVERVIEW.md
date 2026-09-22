@@ -2,11 +2,11 @@
 
 更新：2026-09-23。此页连接当前源码、历史证据与新科研流程；状态以各层的实际证据范围区分。
 
-正在实施：[R29 仓库内容读取与 RSS／Atom](reviews/R29-REUSABLE-ROUTES.md)。选用 Repomix 与 feedparser，计划和验收范围已确定；尚未完成真实验收，不计入已交付能力。
+本轮已交付：[R29 仓库内容读取与 RSS／Atom](reviews/R29-REUSABLE-ROUTES.md)。实际接入 Repomix 1.18.1 和 feedparser 6.0.14，增加 repo fetch/open/find 与 feed 命令；真实仓库、RSS、Atom、离线缓存与冲突/损坏反例已验收。独立复查发现的 Windows Unicode 输出缺陷已修复并重跑。当前源码清单为 178 文件；依赖版本锁定、限制与源级失败见结果文档。
 
-当前部分接入：[R28 ChatGPT 网页 Deep Research 与非付费 X 搜索](reviews/R28-CHATGPT-WEB-RESEARCH.md)。已实测研究入口、计划、自动开始、完成及页面正文读取；Markdown 下载未返回文件，复制返回空内容，本地完整归档尚未验收；已重跑 X 网页索引发现和 oEmbed 读取，长帖仍截断。新增路线明确标注部分可用，当前源码清单为 174 文件。
+当前部分接入：[R28 ChatGPT 网页 Deep Research 与非付费 X 搜索](reviews/R28-CHATGPT-WEB-RESEARCH.md)。已实测研究入口、计划、自动开始、完成及页面正文读取；Markdown 下载未返回文件，复制返回空内容，本地完整归档尚未验收；已重跑 X 网页索引发现和 oEmbed 读取，长帖仍截断。新增路线明确标注部分可用，R28 当时源码清单为 174 文件。
 
-最近完整交付：[R27 自动发起并取回 Gemini Deep Research](reviews/R27-GEMINI-DEEP-RESEARCH.md)。单个真实任务已由代理完成提交、计划核对与启动、等待、官方 Docs 导出、Drive 取回和本地读取。新增的是 FS 的原生浏览器工作流，复用 R26 后段；173 文件源码/指令清单同步。用户无需负责点击开始或手工导出，登录验证和额度等实际节点仍可能需人工处理。
+此前完整网页交付：[R27 自动发起并取回 Gemini Deep Research](reviews/R27-GEMINI-DEEP-RESEARCH.md)。单个真实任务已由代理完成提交、计划核对与启动、等待、官方 Docs 导出、Drive 取回和本地读取。新增的是 FS 的原生浏览器工作流，复用 R26 后段；173 文件源码/指令清单同步。用户无需负责点击开始或手工导出，登录验证和额度等实际节点仍可能需人工处理。
 
 后段基础：[R26 读取现成 Gemini Deep Research 报告](reviews/R26-GEMINI-REPORT-IMPORT.md)。真实 Docs→Markdown 导出已成功并与网页对照正文及表格；本地原样导入、限量预览、离线分页/查找及复用已安装并完成必要验证，独立审查的输出长度与目录计数问题已修正。R26 自身不负责启动研究，R27 已接上浏览器执行流程；grounded search 仍不是 Deep Research。[路线比较](reviews/GOOGLE-DEEP-RESEARCH-OPTIONS.md)保留为选型背景。
 

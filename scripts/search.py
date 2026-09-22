@@ -507,6 +507,12 @@ def main(argv=None):
     if argv and argv[0] == 'report':
         import report
         return report.main(argv[1:])
+    if argv and argv[0] == 'repo':
+        import repository
+        return repository.main(argv[1:])
+    if argv and argv[0] == 'feed':
+        import feed
+        return feed.main(argv[1:])
     if argv and argv[0] == 'recent':
         import recent
         return recent.main(argv[1:])
