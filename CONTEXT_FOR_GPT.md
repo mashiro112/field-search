@@ -2,6 +2,8 @@
 
 Snapshot date: 2026-09-23. For precise synchronization, cite the commit SHA of the version you read.
 
+Current work: [R31 evidence reuse and freshness plan](docs/reviews/R31-EVIDENCE-REUSE-PLAN.md) covers the 14 branches in the linked academic-search selection conversation. Interruption recovery and explicit feed update checks are first; implementation and acceptance are pending. The latest completed delivery remains R30 below.
+
 Latest delivery: [R30 expanded exploration](docs/reviews/R30-EXPANDED-DISCOVERY.md) compared eight capability spaces and added bounded publisher-entry discovery plus local material conversion through MarkItDown 0.1.8. Real sites and representative documents passed scoped checks. The discovered-page reading handoff now reuses the configured existing document runtime. Source coverage and conversion fidelity remain bounded; see the result for counterexamples and deferred candidates.
 
 Previous delivery: [R29 repository content and RSS/Atom](docs/reviews/R29-REUSABLE-ROUTES.md). Explicit repo fetch/open/find reuses Repomix 1.18.1; feed reuses feedparser 6.0.14. Real repositories, RSS and Atom, offline reuse and focused failure cases passed. Independent review found a Windows Unicode output defect; the fixed route passed a fresh RSS read and reuse. Scope and publisher-specific failures are recorded in the result. No paid API or new Deep Research task was used.
