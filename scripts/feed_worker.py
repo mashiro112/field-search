@@ -102,7 +102,13 @@ class PublicRedirectHandler(request.HTTPRedirectHandler):
         if self.redirects > MAX_REDIRECTS:
             raise FeedError("too_many_redirects")
         _validate_redirect(newurl)
-        return super().redirect_request(req, fp, code, msg, headers, newurl)
+        redirected = super().redirect_request(req, fp, code, msg, headers, newurl)
+        if redirected is not None and parse.urlsplit(newurl).netloc.casefold() != parse.urlsplit(req.full_url).netloc.casefold():
+            for header_map in (redirected.headers, redirected.unredirected_hdrs):
+                for key in list(header_map):
+                    if key.casefold() in {"if-none-match", "if-modified-since"}:
+                        header_map.pop(key, None)
+        return redirected
 
 
 def _clean_text(value: Any, limit: int) -> tuple[str, bool]:
@@ -201,17 +207,23 @@ def _looks_like_feed(raw: bytes, content_type: str) -> bool:
     return True
 
 
-def _fetch_bytes(url: str, timeout: float) -> tuple[bytes, Any, str]:
+def _fetch_response(url: str, timeout: float, *, etag: str | None = None,
+                    last_modified: str | None = None) -> tuple[bytes, Any, str, int]:
     _validate_url(url)
     handler = PublicRedirectHandler()
     opener = request.build_opener(handler)
+    headers = {
+        "Accept": "application/rss+xml, application/atom+xml, application/xml, text/xml;q=0.9, */*;q=0.1",
+        "User-Agent": "field-search/1.0 (public RSS/Atom reader)",
+    }
+    if etag:
+        headers["If-None-Match"] = etag
+    if last_modified:
+        headers["If-Modified-Since"] = last_modified
     req = request.Request(
         url,
         method="GET",
-        headers={
-            "Accept": "application/rss+xml, application/atom+xml, application/xml, text/xml;q=0.9, */*;q=0.1",
-            "User-Agent": "field-search/1.0 (public RSS/Atom reader)",
-        },
+        headers=headers,
     )
     try:
         with opener.open(req, timeout=timeout) as response:
@@ -226,13 +238,23 @@ def _fetch_bytes(url: str, timeout: float) -> tuple[bytes, Any, str]:
             raw = response.read(MAX_BYTES + 1)
             if len(raw) > MAX_BYTES:
                 raise FeedError("response_too_large")
-            return raw, response.headers, final_url
+            return raw, response.headers, final_url, 200
     except FeedError:
         raise
     except error.HTTPError as exc:
+        if exc.code == 304 and (etag or last_modified):
+            final_url = str(exc.geturl())
+            _validate_url(final_url)
+            return b"", exc.headers, final_url, 304
         raise FeedError(f"http_{exc.code}") from None
     except (error.URLError, TimeoutError, socket.timeout, OSError):
         raise FeedError("network_error_or_timeout") from None
+
+
+def _fetch_bytes(url: str, timeout: float) -> tuple[bytes, Any, str]:
+    """Keep the existing bounded fetch interface used by site discovery."""
+    raw, headers, final_url, _ = _fetch_response(url, timeout)
+    return raw, headers, final_url
 
 
 def parse_feed_bytes(
@@ -329,18 +351,30 @@ def parse_feed_bytes(
     }
 
 
-def fetch_feed(url: str, *, limit: int, since: str | None, timeout: float) -> dict[str, Any]:
-    raw, headers, final_url = _fetch_bytes(url, timeout)
-    return parse_feed_bytes(raw, requested_url=url, final_url=final_url, headers=headers, limit=limit, since=since)
+def fetch_feed(url: str, *, limit: int, since: str | None, timeout: float,
+               etag: str | None = None, last_modified: str | None = None) -> dict[str, Any]:
+    raw, headers, final_url, http_status = _fetch_response(
+        url, timeout, etag=etag, last_modified=last_modified)
+    validators = {"etag": headers.get("ETag"), "last_modified": headers.get("Last-Modified")}
+    if http_status == 304:
+        validators = {"etag": validators["etag"] or etag,
+                      "last_modified": validators["last_modified"] or last_modified}
+        return {"status": "unchanged", "source": url, "source_final": final_url,
+                "http_status": 304, "validators": validators, "entries": []}
+    result = parse_feed_bytes(raw, requested_url=url, final_url=final_url,
+                              headers=headers, limit=limit, since=since)
+    result.update(http_status=200, validators=validators)
+    return result
 
 
 def _emit(value: dict[str, Any]) -> int:
     print(json.dumps(value, ensure_ascii=False, separators=(",", ":")))
-    return 0 if value.get("status") in {"ok", "partial"} else 2
+    return 0 if value.get("status") in {"ok", "partial", "unchanged"} else 2
 
 
 def main() -> int:
     _configure_stdio()
+    payload: dict[str, Any] = {}
     try:
         payload = json.load(sys.stdin)
         if not isinstance(payload, dict):
@@ -355,7 +389,13 @@ def main() -> int:
             raise ValueError("limit_out_of_range")
         if not 1 <= timeout <= 60:
             raise ValueError("timeout_out_of_range")
-        result = fetch_feed(url, limit=limit, since=since, timeout=timeout)
+        etag = payload.get("etag")
+        last_modified = payload.get("last_modified")
+        if any(value is not None and (not isinstance(value, str) or "\r" in value or "\n" in value or len(value) > 1024)
+               for value in (etag, last_modified)):
+            raise ValueError("conditional_header_invalid")
+        result = fetch_feed(url, limit=limit, since=since, timeout=timeout,
+                            etag=etag, last_modified=last_modified)
         return _emit(result)
     except FeedError as exc:
         return _emit({"status": "unavailable", "source": payload.get("url"), "entries": [], "reason": str(exc)})

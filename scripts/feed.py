@@ -79,6 +79,26 @@ def _content_hash(result: dict[str, Any]) -> str:
     return hashlib.sha256(value.encode("utf-8")).hexdigest()
 
 
+def _window_hash(result: dict[str, Any]) -> str:
+    """Hash only the bounded returned content, not check or retrieval times."""
+    value = {key: result.get(key) for key in ("source_final", "feed", "feed_type", "entries")}
+    return hashlib.sha256(json.dumps(value, ensure_ascii=False, sort_keys=True,
+                                     separators=(",", ":")).encode("utf-8")).hexdigest()
+
+
+def _window_changes(previous: dict[str, Any], current: dict[str, Any]) -> dict[str, Any]:
+    def identities(value: dict[str, Any]) -> set[str]:
+        return {str(item.get("id") or item.get("link")) for item in value.get("entries", [])
+                if isinstance(item, dict) and (item.get("id") or item.get("link"))}
+
+    old = identities(previous)
+    new = identities(current)
+    return {"scope": "returned_entries_only", "identifiable_old": len(old),
+            "identifiable_new": len(new), "new_in_window": len(new - old),
+            "no_longer_in_window": len(old - new),
+            "unknown_identity": len(new) == 0 or len(old) == 0}
+
+
 def _read_cached(path: Path, request_sha256: str) -> dict[str, Any] | None:
     try:
         if path.stat().st_size > MAX_OUTPUT_BYTES:
@@ -123,7 +143,7 @@ def _worker(runtime: Path, payload: dict[str, Any], timeout: float) -> dict[str,
         return {"status": "error", "source": payload.get("url"), "entries": [], "reason": "worker_invalid_json"}
     if not isinstance(result, dict):
         return {"status": "error", "source": payload.get("url"), "entries": [], "reason": "worker_result_not_object"}
-    if completed.returncode != 0 and result.get("status") in {"ok", "partial"}:
+    if completed.returncode != 0 and result.get("status") in {"ok", "partial", "unchanged"}:
         return {"status": "error", "source": payload.get("url"), "entries": [], "reason": "worker_nonzero_exit"}
     return result
 
@@ -155,6 +175,7 @@ def _parser() -> Any:
     parser.add_argument("--limit", type=int, default=5)
     parser.add_argument("--since")
     parser.add_argument("--out", help="new JSON output path; valid matching output is reused")
+    parser.add_argument("--check-from", help="valid previous snapshot to check for updates; requires a new --out")
     parser.add_argument("--python-path", help="explicit isolated Python path; overrides config")
     parser.add_argument("--config", help="local non-secret runtime config JSON")
     parser.add_argument("--timeout", type=float, default=15)
@@ -169,6 +190,15 @@ def main(argv: Sequence[str] | None = None) -> int:
         _validate_arguments(args.url, args.limit, args.since, args.timeout)
         out_path = Path(args.out).expanduser() if args.out else None
         request_sha256 = _request_key(args.url, args.limit, args.since)
+        previous = None
+        if args.check_from:
+            if out_path is None:
+                raise ValueError("check_requires_new_out")
+            if out_path.exists():
+                raise ValueError("check_out_already_exists")
+            previous = _read_cached(Path(args.check_from).expanduser(), request_sha256)
+            if previous is None:
+                raise ValueError("check_from_invalid_or_different_request")
         if out_path is not None and out_path.exists():
             cached = _read_cached(out_path, request_sha256)
             if cached is None:
@@ -183,12 +213,47 @@ def main(argv: Sequence[str] | None = None) -> int:
             _emit(result, args.out)
             return 2
         payload = {"url": args.url, "limit": args.limit, "since": args.since, "timeout": args.timeout}
+        if previous is not None:
+            validators = previous.get("validators") or {}
+            # A validator describes the final representation, not an unrelated
+            # URL reached through a redirect. In that case make a normal GET.
+            if isinstance(validators, dict) and previous.get("source_final") == args.url:
+                payload["etag"] = validators.get("etag")
+                payload["last_modified"] = validators.get("last_modified")
         result = _worker(runtime, payload, args.timeout)
+        checked_at = dt.datetime.now(dt.timezone.utc).isoformat().replace("+00:00", "Z")
+        if result.get("status") == "unchanged":
+            if previous is None:
+                raise ValueError("unexpected_304_without_previous_snapshot")
+            if result.get("source_final") != previous.get("source_final"):
+                raise ValueError("not_modified_final_url_changed")
+            validation = result
+            result = dict(previous)
+            result.update(
+                http_status=304, validators=validation.get("validators"),
+                source_final=validation.get("source_final") or previous.get("source_final"),
+                checked_at=checked_at, change_status="not_modified",
+                previous_snapshot=str(Path(args.check_from).expanduser().resolve()),
+                previous_snapshot_sha256=previous.get("result_sha256"),
+                content_sha256=previous.get("content_sha256") or _window_hash(previous))
+            result.pop("result_sha256", None)
+        elif result.get("status") in {"ok", "partial"}:
+            result["checked_at"] = checked_at
+            result["fetched_at"] = checked_at
+            result["content_sha256"] = _window_hash(result)
+            if previous is not None:
+                result["previous_snapshot"] = str(Path(args.check_from).expanduser().resolve())
+                result["previous_snapshot_sha256"] = previous.get("result_sha256")
+                result["change_status"] = (
+                    "returned_window_changed" if result["content_sha256"] !=
+                    (previous.get("content_sha256") or _window_hash(previous))
+                    else "returned_window_unchanged")
+                result["change_summary"] = _window_changes(previous, result)
         result["request_sha256"] = request_sha256
-        result["network_used"] = True
+        result["network_used"] = True if result.get("status") in {"ok", "partial"} else None
         result["config"] = runtime_config.redacted_config_summary(config_result)
         if result.get("status") in {"ok", "partial"}:
-            result["fetched_at"] = dt.datetime.now(dt.timezone.utc).isoformat().replace("+00:00", "Z")
+            result["network_used"] = True
             result["result_sha256"] = _content_hash(result)
             if out_path is not None:
                 out_path.parent.mkdir(parents=True, exist_ok=True)

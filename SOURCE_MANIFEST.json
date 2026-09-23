@@ -1,7 +1,7 @@
 {
   "snapshot_date": "2026-09-23",
   "description": "Exact installed source snapshot; caches and runtime artifacts excluded.",
-  "file_count": 182,
+  "file_count": 184,
   "files": [
     {
       "path": "agents/openai.yaml",
@@ -765,8 +765,8 @@
     },
     {
       "path": "references/integration-map.md",
-      "bytes": 12436,
-      "sha256": "75814fae16c070cfebd69efeddb26e0d89bb84cf6227b9ada6a2c64ab12c06b9"
+      "bytes": 13549,
+      "sha256": "b52e74bfb782d1b6443c023601c80ec53ecbf9052305836e788e7c828f56fafc"
     },
     {
       "path": "references/providers.md",
@@ -775,8 +775,8 @@
     },
     {
       "path": "references/r24-routes.md",
-      "bytes": 5924,
-      "sha256": "976d0950a8124831c4acecb6598d27fdd0900533aee2c3519595e294926da9d4"
+      "bytes": 6174,
+      "sha256": "ec039ef7565f6ee3f06c929bc6ce736a27a3fec38b85eec61b6ce5820cf9fe51"
     },
     {
       "path": "references/r25-routes.md",
@@ -785,13 +785,18 @@
     },
     {
       "path": "references/r29-routes.md",
-      "bytes": 4827,
-      "sha256": "3ba48771fed7eecbc17414d57869602624c0d8d87b7a3eeb72a2921b26bbae5f"
+      "bytes": 5013,
+      "sha256": "cac90b8bd393b70013293a48031aeac188876f5af4370aaef5fed5eacfaabf23"
     },
     {
       "path": "references/r30-routes.md",
       "bytes": 6607,
       "sha256": "66c5edc43a6384f2a1b86a4c31cc6c6a5e8ace77d03b8d008e26399294ae82d6"
+    },
+    {
+      "path": "references/r31-routes.md",
+      "bytes": 4714,
+      "sha256": "a253cf967d84ccf111c1ca0792d20497387468a26b452edccdb7c50fb1941428"
     },
     {
       "path": "references/source-recipes.md",
@@ -810,8 +815,8 @@
     },
     {
       "path": "scripts/batch.py",
-      "bytes": 13587,
-      "sha256": "4ae6525f54518627f78f170ecaaa73268c0d5e5e581ca1de8d8de372537ef010"
+      "bytes": 17013,
+      "sha256": "cf140ba1e7b85de53aced5468968bb8606111c3ca43a1c47fdd8fb56f586b947"
     },
     {
       "path": "scripts/bilibili.py",
@@ -840,18 +845,23 @@
     },
     {
       "path": "scripts/feed_worker.py",
-      "bytes": 14365,
-      "sha256": "32b8af275e586a33350338e5e076686bbf31c8c5a04a205ab88b011d7d66633c"
+      "bytes": 16554,
+      "sha256": "c30572c9ca74de83c4948c4d6c1756f98fefc788c571757f6ed0356e904b96fc"
     },
     {
       "path": "scripts/feed.py",
-      "bytes": 8883,
-      "sha256": "6c0aa12d663c1b031fb250ba5a897cc941a04c6d026c852a22be4dc683df057b"
+      "bytes": 12725,
+      "sha256": "fbf72d3200657e091d50bf17a5454c60d6f2eb6d4ad699dbb2411175e2cb9493"
     },
     {
       "path": "scripts/integrated.py",
       "bytes": 17365,
       "sha256": "f338f9b1664f87287162d4818f2e512d0c3d85e532efd16407430165dbd4de04"
+    },
+    {
+      "path": "scripts/locate.py",
+      "bytes": 6620,
+      "sha256": "15b90bf968f86f3e9e1dd08ab8eadf46f7122ddf5394865eff92919ed599a1ae"
     },
     {
       "path": "scripts/material_worker.py",
@@ -885,8 +895,8 @@
     },
     {
       "path": "scripts/search.py",
-      "bytes": 35604,
-      "sha256": "ef31142806f1e3a5ee0957336b3abc01f35c1c95f5a4dd03a7db0cb4a5c5b439"
+      "bytes": 35700,
+      "sha256": "f226e76015cce4d210da7fab3e64919b05ab48af8db62fa22cfc44542218a00d"
     },
     {
       "path": "scripts/video_worker.py",
@@ -905,8 +915,8 @@
     },
     {
       "path": "SKILL.md",
-      "bytes": 22322,
-      "sha256": "7a787f80198173c2b2907c942173a559911e53312d1fcc460991cae9f5ac4276"
+      "bytes": 20023,
+      "sha256": "e02344f52cc5d105751b0d781f7ecef30689e75c7d3b54e43babbded91af16cf"
     },
     {
       "path": "THIRD_PARTY_NOTICES/Crawl4AI-LICENSE.txt",

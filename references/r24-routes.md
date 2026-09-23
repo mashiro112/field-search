@@ -116,11 +116,16 @@ Create a small manifest; each item owns its target and options:
 <python> <skill-dir>/scripts/search.py batch status <result.json>
 ```
 
-The request key includes `kind`, target, and item options. Only `ok` and
-`no_results` items with the same key are reused; partial/error/unavailable
-items are attempted again. `--refresh` re-reads every item and
+The request key includes `kind`, target, and item options. `ok` and
+`no_results` items with the same key are reused, as are successful R31
+conversion statuses `imported` and `reused`; partial/error/unavailable items
+are attempted again. `--refresh` re-reads every item and
 `--refresh-id` re-reads selected items. The original manifest is never
 overwritten. With `--out`, stdout is a bounded run summary; the saved result
 manifest contains child outputs needed for reuse and can be inspected on
 demand. The batch runner uses separate child invocations and does not
 share mutable parameters between items or create a global index.
+
+R31 adds per-item durable checkpoints and explicit `feed`, `discover` and
+`convert` kinds. See [r31-routes.md](r31-routes.md) for resume semantics; the
+older examples above remain valid.

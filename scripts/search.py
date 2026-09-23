@@ -559,6 +559,9 @@ def main(argv=None):
     if argv and argv[0] == 'convert':
         import material
         return material.main(argv[1:])
+    if argv and argv[0] == 'locate':
+        import locate
+        return locate.main(argv[1:])
     if argv and argv[0] == 'recent':
         import recent
         return recent.main(argv[1:])

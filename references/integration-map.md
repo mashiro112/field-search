@@ -71,3 +71,10 @@
 - Existing GitHub connector code/issue/PR readers and installed ripgrep can be reused through host tools without another FS service. Trafilatura already participates in the document reader's HTML fallback. Context7, Docling and Wayback remain candidates with different access/runtime/coverage constraints; they are not silently installed or counted as new accepted routes.
 - [r30-routes.md](r30-routes.md) holds practical commands and limits. The public result `docs/reviews/R30-EXPANDED-DISCOVERY.md` records which scenarios were actually run, the wider candidate space and the remaining boundaries.
 - `search.py` also honors the existing config's optional `runtimes.document` path for ordinary public document reads and offline document commands, reusing the already installed websearch runtime. This fixes the discovery-to-reading handoff when the common entry starts under another Python interpreter; the Jina backend and explicit Crawl4AI contract retain their existing scope.
+
+# R31 durable reuse and local evidence location (2026-09-23)
+
+- `scripts/batch.py` writes a valid task-local checkpoint before work and replaces it after each item. This is FS-owned recovery using standard-library atomic file replacement; no scheduler is added. Existing read/video/discourse routing remains, with explicit feed/discover/convert additions.
+- `scripts/feed.py`/`feed_worker.py` add one-shot checks using standard HTTP ETag/Last-Modified validators and the installed feedparser runtime. A 304 reuses verified previous content and keeps its original fetch time. A changed response compares only bounded returned entries, not full feed history.
+- `scripts/locate.py` is FS-owned adaptation over existing `report._resolve_report` and `document.load_document`. Its explicit manifest, integrity checks and quote/offset output borrow from W3C Web Annotation selectors; no third-party search index, embedding service or citation graph is installed.
+- [r31-routes.md](r31-routes.md) records commands, scope and limits. These additions do not complete R28 ChatGPT report export or login-dependent X search.

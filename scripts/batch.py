@@ -15,6 +15,7 @@ import os
 from pathlib import Path
 import subprocess
 import sys
+import tempfile
 import time
 from typing import Any, Sequence
 
@@ -22,7 +23,7 @@ import runtime_config
 
 
 SCRIPT = Path(__file__).with_name("search.py")
-SUCCESS = {"ok", "no_results"}
+SUCCESS = {"ok", "no_results", "imported", "reused"}
 ALLOWED_ENV = {
     "SYSTEMROOT",
     "WINDIR",
@@ -43,6 +44,9 @@ KIND_OPTIONS = {
     "read": {"reader", "wait_css", "wait_timeout", "include_links", "limit", "page", "timeout", "sort", "since"},
     "video": {"language", "subtitle_type", "find", "max_segments", "timeout", "config", "python_path", "session_path"},
     "discourse": {"post_limit", "request_budget", "batch_size", "timeout"},
+    "feed": {"limit", "since", "timeout", "config", "python_path"},
+    "discover": {"kind", "limit", "contains", "request_budget", "timeout"},
+    "convert": {"out_dir", "config", "python_path", "source_url", "timeout"},
 }
 
 
@@ -85,11 +89,13 @@ def _validate_items(items: Any) -> list[dict[str, Any]]:
         if not item_id or item_id in seen:
             raise ValueError("item_ids_must_be_nonempty_unique")
         if kind not in KIND_OPTIONS:
-            raise ValueError("item_kind_must_be_read_video_or_discourse")
+            raise ValueError("item_kind_unsupported")
         if not target:
             raise ValueError(f"item_{item_id}_target_required")
         if not isinstance(options, dict) or any(key not in KIND_OPTIONS[kind] for key in options):
             raise ValueError(f"item_{item_id}_options_invalid")
+        if kind == "convert" and not str(options.get("out_dir", "")).strip():
+            raise ValueError(f"item_{item_id}_out_dir_required")
         seen.add(item_id)
         normalized.append({"id": item_id, "kind": kind, "target": target, "options": dict(options)})
     return normalized
@@ -105,6 +111,24 @@ def _write_new(path: str, value: dict[str, Any]) -> None:
         handle.write("\n")
 
 
+def _replace_checkpoint(path: str, value: dict[str, Any]) -> None:
+    """Replace a completed checkpoint atomically, keeping the prior file on failure."""
+    target = Path(path)
+    temporary = None
+    try:
+        with tempfile.NamedTemporaryFile("w", encoding="utf-8", dir=target.parent,
+                                         prefix=target.name + ".", suffix=".tmp", delete=False) as handle:
+            temporary = Path(handle.name)
+            json.dump(value, handle, ensure_ascii=False, indent=2)
+            handle.write("\n")
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(temporary, target)
+    finally:
+        if temporary is not None:
+            temporary.unlink(missing_ok=True)
+
+
 def _config_fingerprint(options: dict[str, Any]) -> str:
     explicit = options.get("config") or os.getenv(runtime_config.CONFIG_ENV)
     path, _ = runtime_config.selected_config_path(explicit)
@@ -117,6 +141,21 @@ def _config_fingerprint(options: dict[str, Any]) -> str:
 
 def _request_key(item: dict[str, Any]) -> str:
     options = item.get("options", {})
+    target_sha256 = None
+    if item["kind"] == "convert":
+        digest = hashlib.sha256()
+        try:
+            target_path = Path(item["target"])
+            size = target_path.stat().st_size
+            if size > 25 * 1024 * 1024:
+                target_sha256 = f"over_material_limit:{size}"
+            else:
+                with target_path.open("rb") as handle:
+                    for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+                        digest.update(chunk)
+                target_sha256 = digest.hexdigest()
+        except OSError:
+            target_sha256 = "missing_or_unreadable"
     body = json.dumps(
         {
             "kind": item["kind"],
@@ -125,8 +164,9 @@ def _request_key(item: dict[str, Any]) -> str:
             # The same config path with changed contents is a different
             # effective runtime and must not reuse a prior success.
             "config_fingerprint": _config_fingerprint(options)
-            if item["kind"] in {"video", "read"}
+            if item["kind"] in {"video", "read", "feed", "convert"}
             else None,
+            "target_sha256": target_sha256,
         },
         ensure_ascii=False,
         sort_keys=True,
@@ -160,8 +200,10 @@ def _child_args(item: dict[str, Any]) -> list[str]:
 
 
 def _run_item(item: dict[str, Any]) -> tuple[dict[str, Any], float]:
-    timeout = float(item.get("options", {}).get("timeout", 20))
-    timeout = max(1.0, min(timeout, 60.0))
+    default_timeout = 60 if item["kind"] == "convert" else 20
+    maximum_timeout = 180 if item["kind"] == "convert" else 60
+    timeout = float(item.get("options", {}).get("timeout", default_timeout))
+    timeout = max(1.0, min(timeout, maximum_timeout))
     started = time.monotonic()
     try:
         completed = subprocess.run(
@@ -232,8 +274,24 @@ def run(argv: Sequence[str]) -> int:
         items = _validate_items(manifest.get("items"))
         previous = manifest.get("results") if isinstance(manifest.get("results"), dict) else {}
         refreshed = set(args.refresh_id)
-        results: dict[str, Any] = {}
+        unknown_refresh = refreshed - {item["id"] for item in items}
+        if unknown_refresh:
+            raise ValueError("refresh_id_unknown")
+        # Keep already completed items in the first checkpoint. Explicitly
+        # refreshed items are removed, so an interrupted refresh stays pending.
+        results: dict[str, Any] = {
+            item["id"]: previous[item["id"]] for item in items
+            if not args.refresh and item["id"] not in refreshed
+            and isinstance(previous.get(item["id"]), dict)
+        }
         executed = reused = 0
+        result_manifest = dict(manifest)
+        result_manifest.update(last_run_at=_now(), status="in_progress", results=results,
+                               summary={"items": len(items), "executed": 0, "reused": 0,
+                                        "pending_or_failed": len(items) - len(results),
+                                        "refresh_all": args.refresh, "refresh_ids": sorted(refreshed)})
+        if args.out:
+            _write_new(args.out, result_manifest)
         for item in items:
             item_id = item["id"]
             key = _request_key(item)
@@ -263,6 +321,14 @@ def run(argv: Sequence[str]) -> int:
                 }
                 executed += 1
             results[item_id] = entry
+            if args.out:
+                result_manifest["last_run_at"] = _now()
+                result_manifest["summary"].update(
+                    executed=executed, reused=reused,
+                    pending_or_failed=sum(
+                        candidate["id"] not in results or results[candidate["id"]].get("status") not in SUCCESS
+                        for candidate in items))
+                _replace_checkpoint(args.out, result_manifest)
         statuses = [entry.get("status") for entry in results.values()]
         if all(status in SUCCESS for status in statuses):
             status = "ok"
@@ -270,7 +336,6 @@ def run(argv: Sequence[str]) -> int:
             status = "partial"
         else:
             status = "unavailable"
-        result_manifest = dict(manifest)
         result_manifest.update(
             {
                 "last_run_at": _now(),
@@ -287,7 +352,7 @@ def run(argv: Sequence[str]) -> int:
             }
         )
         if args.out:
-            _write_new(args.out, result_manifest)
+            _replace_checkpoint(args.out, result_manifest)
             print(json.dumps({
                 "status": status,
                 "summary": result_manifest["summary"],
@@ -315,7 +380,8 @@ def status(argv: Sequence[str]) -> int:
             "items": len(manifest.get("items", [])) if isinstance(manifest.get("items"), list) else None,
             "results": len(results),
             "successful": sum(value in SUCCESS for value in statuses),
-            "pending_or_failed": sum(value not in SUCCESS for value in statuses),
+            "pending_or_failed": max(0, len(manifest.get("items", [])) - len(results))
+            + sum(value not in SUCCESS for value in statuses),
             "scope": "task-local; no network request",
         }
         print(json.dumps(summary, ensure_ascii=False, indent=2))

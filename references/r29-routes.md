@@ -84,6 +84,10 @@ dates are included without `--since`, but excluded and counted when that filter
 is set. Cache reuse is offline and
 does not refresh a live feed; use a new output file for fresh retrieval.
 
+R31 adds `--check-from <valid-prior.json> --out <new.json>` for an explicit
+conditional update check. See [r31-routes.md](r31-routes.md); the offline
+cache behavior above stays intact.
+
 ## Acceptance boundaries
 
 See `docs/reviews/R29-REUSABLE-ROUTES.md` in the public FS repository for the
