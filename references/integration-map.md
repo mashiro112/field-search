@@ -1,5 +1,10 @@
 # 实际集成清单
 
+## R32 X 站内只读搜索（2026-09-23）
+
+- Skill 在有现成授权浏览器桥接时，直接调用已安装的 [`@jackwener/opencli` 1.8.7](https://github.com/jackwener/opencli) `twitter search/thread`；其许可证为 Apache-2.0。FS 未复制适配器代码、未获取浏览器凭据、未接付费 X API，也未让普通搜索自动调用这一路线。命令、实测和边界见 [r32-x-site.md](r32-x-site.md)。
+- 两组真实搜索及线程读取验证了站内搜索与回复读取；第二组恰好达到请求上限。上游内部最多翻五页，结果没有总数/截断字段，故 FS 只能报告回复完整性未知，不能声称取回全部讨论。
+
 # FS01-R12.5 explicit academic-edges ownership
 
 - scripts/academic_edges.py: exact isolated R12.4 bounded DOI reader, exposed as a new explicit script; it is not added to the ordinary source list.

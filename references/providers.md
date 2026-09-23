@@ -69,6 +69,8 @@ Use `--query-file <UTF-8-file>` for long queries or literal shell metacharacters
 
 ## X without Grok
 
+When an existing authorized OpenCLI browser bridge is connected, the [R32 read-only X site route](r32-x-site.md) can search inside X and read bounded reply context. Its result does not certify thread completeness. Keep the public path below for hosts without that bridge or tasks needing only a known post.
+
 Native `site:x.com` searches can discover indexed posts. Then `read` a known public X post with the bundled free oEmbed adapter; tested on this Windows host without keys. `x-public` is a last30days keyless web-index fallback, not direct X search; it can miss posts or fail on a repeated query. `--reader x-profile` accepts a handle, but its unofficial timeline route returned 429 in testing. Do not report full X access from snippets or an embed alone. Reddit now has actual bundled RSS and comment collectors, described below.
 
 ```text

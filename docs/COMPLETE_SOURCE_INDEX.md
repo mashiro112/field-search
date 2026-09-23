@@ -154,13 +154,14 @@ Every published original source file is listed below. Hashes refer to exact sour
 - [references/evidence.md](../references/evidence.md) — 8699 bytes; SHA256 `87b24acb8bca9b66d13a947c05deabb6160d26c8767ae1ae99eeb098b55d19fc`
 - [references/gemini-deep-research.md](../references/gemini-deep-research.md) — 3810 bytes; SHA256 `8c99f189de0a6e891028a39287c067b97aa49c6ef981c2fa22617ec354edce95`
 - [references/gemini-report.md](../references/gemini-report.md) — 3889 bytes; SHA256 `2d723865f32c279a6d7fbf682b065eed89da91fbd8e107ae3b86f99b90071c2f`
-- [references/integration-map.md](../references/integration-map.md) — 13549 bytes; SHA256 `b52e74bfb782d1b6443c023601c80ec53ecbf9052305836e788e7c828f56fafc`
-- [references/providers.md](../references/providers.md) — 21553 bytes; SHA256 `4ccd1fc5db2b72e4c7e3f4c5ae001ca71ca55d7159890ba896afb61984f18bf3`
+- [references/integration-map.md](../references/integration-map.md) — 14228 bytes; SHA256 `a75f2f2ff9b46e9cfafbac8a3238f928b940e5fc8263237c62f1a6d9a0803ee0`
+- [references/providers.md](../references/providers.md) — 21861 bytes; SHA256 `690c07ec94f4905e69b7f07b927dfa85dc226c54394e14458e48df9098a1b524`
 - [references/r24-routes.md](../references/r24-routes.md) — 6174 bytes; SHA256 `ec039ef7565f6ee3f06c929bc6ce736a27a3fec38b85eec61b6ce5820cf9fe51`
 - [references/r25-routes.md](../references/r25-routes.md) — 4196 bytes; SHA256 `815597590853932cf7cbe7dbb4ced197d27758bc5f540adcb6d593153d7e95ad`
 - [references/r29-routes.md](../references/r29-routes.md) — 5013 bytes; SHA256 `cac90b8bd393b70013293a48031aeac188876f5af4370aaef5fed5eacfaabf23`
 - [references/r30-routes.md](../references/r30-routes.md) — 6607 bytes; SHA256 `66c5edc43a6384f2a1b86a4c31cc6c6a5e8ace77d03b8d008e26399294ae82d6`
 - [references/r31-routes.md](../references/r31-routes.md) — 4714 bytes; SHA256 `a253cf967d84ccf111c1ca0792d20497387468a26b452edccdb7c50fb1941428`
+- [references/r32-x-site.md](../references/r32-x-site.md) — 2264 bytes; SHA256 `e8621cb755f0c66a092ddda3f8a33c74e7fad7550a308c9259cc40276f7437db`
 - [references/source-recipes.md](../references/source-recipes.md) — 3200 bytes; SHA256 `f50209e8d56856837eef5528884f2e2b8abc840655179639e37587b68bbdc76e`
 - [references/sources.md](../references/sources.md) — 3740 bytes; SHA256 `af5390c55cd51942681f62bce5e6aa66eae660b8b0c388466559f9d74596e0bd`
 - [scripts/academic_edges.py](../scripts/academic_edges.py) — 35739 bytes; SHA256 `28f87385091976de07b8594757374b1b092589f97acb76d6c80b82bd6ecfd985`
@@ -184,5 +185,5 @@ Every published original source file is listed below. Hashes refer to exact sour
 - [scripts/video_worker.py](../scripts/video_worker.py) — 7119 bytes; SHA256 `65792e667aed2a6e1c1aa26202b85fe36a2391cc16a5fe9346a7d89ce17523da`
 - [scripts/video.py](../scripts/video.py) — 10471 bytes; SHA256 `b936ee62668ce78a747f47e22ab5f78e2fff0859c38d61d947edb902a34d8ccd`
 - [scripts/xiaohongshu.py](../scripts/xiaohongshu.py) — 10380 bytes; SHA256 `8cf4732ba0ed4032cb5634bf323ea671c76881921f2624a31d4331e0f468e994`
-- [SKILL.md](../SKILL.md) — 20023 bytes; SHA256 `e02344f52cc5d105751b0d781f7ecef30689e75c7d3b54e43babbded91af16cf`
+- [SKILL.md](../SKILL.md) — 20478 bytes; SHA256 `02009a8251bc74a5328dc7c11ee9cfad264f55184ced7c8c0f06a4f39637eb45`
 - [THIRD_PARTY_NOTICES/Crawl4AI-LICENSE.txt](../THIRD_PARTY_NOTICES/Crawl4AI-LICENSE.txt) — 9998 bytes; SHA256 `193fe32704bee15cd74f5153e569cdf830e26445e19798a55daee32da40758aa`

@@ -1,7 +1,7 @@
 {
   "snapshot_date": "2026-09-23",
   "description": "Exact installed source snapshot; caches and runtime artifacts excluded.",
-  "file_count": 184,
+  "file_count": 185,
   "files": [
     {
       "path": "agents/openai.yaml",
@@ -765,13 +765,13 @@
     },
     {
       "path": "references/integration-map.md",
-      "bytes": 13549,
-      "sha256": "b52e74bfb782d1b6443c023601c80ec53ecbf9052305836e788e7c828f56fafc"
+      "bytes": 14228,
+      "sha256": "a75f2f2ff9b46e9cfafbac8a3238f928b940e5fc8263237c62f1a6d9a0803ee0"
     },
     {
       "path": "references/providers.md",
-      "bytes": 21553,
-      "sha256": "4ccd1fc5db2b72e4c7e3f4c5ae001ca71ca55d7159890ba896afb61984f18bf3"
+      "bytes": 21861,
+      "sha256": "690c07ec94f4905e69b7f07b927dfa85dc226c54394e14458e48df9098a1b524"
     },
     {
       "path": "references/r24-routes.md",
@@ -797,6 +797,11 @@
       "path": "references/r31-routes.md",
       "bytes": 4714,
       "sha256": "a253cf967d84ccf111c1ca0792d20497387468a26b452edccdb7c50fb1941428"
+    },
+    {
+      "path": "references/r32-x-site.md",
+      "bytes": 2264,
+      "sha256": "e8621cb755f0c66a092ddda3f8a33c74e7fad7550a308c9259cc40276f7437db"
     },
     {
       "path": "references/source-recipes.md",
@@ -915,8 +920,8 @@
     },
     {
       "path": "SKILL.md",
-      "bytes": 20023,
-      "sha256": "e02344f52cc5d105751b0d781f7ecef30689e75c7d3b54e43babbded91af16cf"
+      "bytes": 20478,
+      "sha256": "02009a8251bc74a5328dc7c11ee9cfad264f55184ced7c8c0f06a4f39637eb45"
     },
     {
       "path": "THIRD_PARTY_NOTICES/Crawl4AI-LICENSE.txt",

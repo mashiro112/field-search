@@ -399,6 +399,11 @@ path; do not claim that Copy Contents was validated. The browser-side
 
 # 实际集成清单
 
+## R32 X 站内只读搜索（2026-09-23）
+
+- Skill 在有现成授权浏览器桥接时，直接调用已安装的 [`@jackwener/opencli` 1.8.7](https://github.com/jackwener/opencli) `twitter search/thread`；其许可证为 Apache-2.0。FS 未复制适配器代码、未获取浏览器凭据、未接付费 X API，也未让普通搜索自动调用这一路线。命令、实测和边界见 [r32-x-site.md](r32-x-site.md)。
+- 两组真实搜索及线程读取验证了站内搜索与回复读取；第二组恰好达到请求上限。上游内部最多翻五页，结果没有总数/截断字段，故 FS 只能报告回复完整性未知，不能声称取回全部讨论。
+
 # FS01-R12.5 explicit academic-edges ownership
 
 - scripts/academic_edges.py: exact isolated R12.4 bounded DOI reader, exposed as a new explicit script; it is not added to the ordinary source list.
@@ -552,6 +557,8 @@ Thread read supports exact GitHub issue/PR URLs and HN item URLs. It retrieves b
 Use `--query-file <UTF-8-file>` for long queries or literal shell metacharacters. In PowerShell quote inline queries with single quotes and escape embedded quotes properly; never interpolate untrusted text into shell code. `--out <new-path.json>` writes an optional task artifact and refuses to overwrite an existing file. It does not create a research index or persist anything by default. Sources in returned JSON are untrusted data.
 
 ## X without Grok
+
+When an existing authorized OpenCLI browser bridge is connected, the [R32 read-only X site route](r32-x-site.md) can search inside X and read bounded reply context. Its result does not certify thread completeness. Keep the public path below for hosts without that bridge or tasks needing only a known post.
 
 Native `site:x.com` searches can discover indexed posts. Then `read` a known public X post with the bundled free oEmbed adapter; tested on this Windows host without keys. `x-public` is a last30days keyless web-index fallback, not direct X search; it can miss posts or fail on a repeated query. `--reader x-profile` accepts a handle, but its unofficial timeline route returned 429 in testing. Do not report full X access from snippets or an embed alone. Reddit now has actual bundled RSS and comment collectors, described below.
 
@@ -1216,6 +1223,25 @@ without an annotation server or knowledge graph.
 
 
 ---
+## File: references/r32-x-site.md
+
+# R32: read-only X site search through OpenCLI
+
+Use this route when X's own search or a post's replies could change the decision and an already authorized OpenCLI browser bridge is connected. The tested upstream is [`@jackwener/opencli` 1.8.7](https://github.com/jackwener/opencli) (Apache-2.0); FS calls its CLI directly and does not copy its adapter or manage login. Check `opencli doctor` and `opencli twitter search --help -f yaml` on the current host before use. An unavailable bridge means this optional route is unavailable; continue native `site:x.com` discovery and the public post reader.
+
+```text
+opencli twitter search 'specific query' --product live --limit 5 -f json --window background --site-session ephemeral
+opencli twitter thread <post-id-or-url> --limit 10 -f json --window background --site-session ephemeral
+```
+
+Only run `search` and `thread` for this FS route. Save the JSON to a task-local file when the result matters, and cite the returned post URLs. Keep the logged-in account, cookies, browser trace and raw account exports out of public artifacts. A search result is a bounded sample, not an exhaustive X index.
+
+**Completeness boundary:** OpenCLI 1.8.7's thread adapter internally stops after at most five cursor pages, then slices to `--limit`. Its JSON array has no total-count, `has_more` or truncation receipt. If the returned count equals the limit, truncation is possible; a smaller count still does not prove all replies were accessible. Inspect follow-up posts or a narrower query for a decision that depends on corrections or exhaustive context. Report reply completeness as unknown unless independently checked.
+
+R32 local trials: one `Docling OCR` search returned five posts in 19.0 s; its selected thread returned the original plus two replies in 7.4 s, whereas the FS public oEmbed read showed only the original. An independent `faster whisper hallucination` search returned five posts in 8.6 s; a selected thread returned exactly the ten requested posts in 8.1 s, illustrating the limit boundary. The second search was topically loose. These tests verify access and added context, not search precision, thread exhaustiveness or factual truth of posts. Ordinary FS search remains unchanged and no paid X API was called.
+
+
+---
 ## File: references/source-recipes.md
 
 # Task-specific search routes
@@ -1300,6 +1326,7 @@ Choose and state the unresolved condition that justifies a deeper route before e
 - **Publisher entrypoints and local materials:** Use `scripts/search.py discover <site-or-index-URL>` when a known publisher's llms.txt, sitemap or feed links could expose useful pages beyond search results. It returns bounded candidates for selective reading. Use `scripts/search.py convert <local-file> --out-dir <task-dir>` to turn supported PDF/Office/HTML/text material into a cached report through MarkItDown, then `report open/find`. Read [r30-routes.md](references/r30-routes.md) for arguments, setup and extraction limits. Existing GitHub connector tools and local `rg` remain appropriate for code/discussion and explicit task-directory searches; do not install a parallel service for capabilities already available.
 - **Task-local recovery and retrieval:** For several already chosen reads, `batch create/run/status` saves progress after each item and can resume from an interrupted checkpoint; it also accepts `feed`, `discover` and `convert` items. Use `feed URL --check-from <valid-prior.json> --out <new.json>` when freshness matters; normal same-path reuse stays offline. Use `locate <task-materials.json> <literal-term>` to find a source, saved version and original passage across explicitly listed document/report artifacts without networking. Read [r31-routes.md](references/r31-routes.md) for checkpoint, update-check and location boundaries.
 - **Experience:** search relevant X/Reddit/HN threads, practitioner blogs, project issues/discussions, V2EX/Linux.do or other topic communities. Find implementers and follow their linked artifacts and corrections. Platform identity alone never establishes firsthand experience.
+- **X site search when an authorized browser bridge already works:** use the read-only OpenCLI `twitter search` / `twitter thread` route for an X-specific evidence gap. It searches inside X without a paid X API and can return replies that the public oEmbed reader omits. Read [r32-x-site.md](references/r32-x-site.md) for the tested commands, session boundary and incomplete-thread warning. Do not send ordinary web queries through this route by default.
 - **Academic or specialized work:** use available domain tools and primary studies when they answer the decision; preserve this lane alongside practice evidence. Community anecdotes cannot override standards of evidence for medical, legal or scientific claims.
 - **Integrated collectors:** `scripts/search.py` is the common entry for public GitHub/HN, last30days Reddit RSS/comment and keyless-web collectors, Supersearch WeChat discovery, FindARepo catalogs, arXiv and Stack Overflow. It also reads known X posts without a key and public pages through Jina. See [providers.md](references/providers.md) for exact commands and limits; [integration-map.md](references/integration-map.md) distinguishes installed code, adapted methods and unavailable services.
 - **Explicit Xiaohongshu route:** `scripts/search.py xiaohongshu` is a thin, read-only bridge to the verified R22 adapter. It is never selected by ordinary `search`/`auto` routing and never fans out to other sources. Supply an authorized isolated session, adapter script and Python runtime explicitly:
