@@ -2,6 +2,8 @@
 
 更新：2026-09-23。此页连接当前源码、历史证据与新科研流程；状态以各层的实际证据范围区分。
 
+R32 正在执行：[首阶段真实复现与反例](reviews/R32-PHASE-1.md)。已测到 Crawl4AI 自动深入的有限收益、现有 OpenCLI 浏览器桥接的非 API X 站内搜索与回复读取；也测到 Context7 指定 React 18 版本却混入 React 19 说明、Docling 表格错误单元格和竖排中文 OCR 失效。QMD 语义索引因本机 CPU/内存成本暂停；这些尚非新功能的最终验收，源码清单仍为 184 文件，余下分支和独立复查继续进行。
+
 最新调研交接：[R32 九个扩展分支](reviews/R32-EXPANSION-RESEARCH.md)与[执行 Goal Prompt](reviews/R32-GOAL-PROMPT.md)。优先试 QMD 语义找回、Crawl4AI 定向多页读取、Context7 版本文档和 Docling 复杂材料，再按价值推进结构代码检索、ASR、社区、多引擎与时间变化。已实际取回 Context7 文档片段；Bluesky 匿名搜索返回 403。候选尚未部署或效果验收；当前实现基线仍为 R31、184 文件。交由 FS01 使用用户当前选择的 GPT-6 Sol 执行。
 
 最新交付：[R31 中断恢复、订阅源更新与原文找回](reviews/R31-EVIDENCE-REUSE.md)。[14 分支计划](reviews/R31-EVIDENCE-REUSE-PLAN.md)已完成取舍：批处理逐项保存、Feed 条件更新检查、`locate` 跨已保存材料找回来源和原文位置。真实混合批次、RSS 304 和离线材料查询已验收；当前源码清单为 184 文件。
