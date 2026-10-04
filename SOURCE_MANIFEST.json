@@ -1,7 +1,7 @@
 {
   "snapshot_date": "2026-10-04",
   "description": "Exact installed source snapshot; caches and runtime artifacts excluded.",
-  "file_count": 196,
+  "file_count": 199,
   "files": [
     {
       "path": "agents/openai.yaml",
@@ -765,8 +765,8 @@
     },
     {
       "path": "references/integration-map.md",
-      "bytes": 16637,
-      "sha256": "8b7e134087322578a915f8b31aeb6a26a57ee731594929af145e480d3b30288c"
+      "bytes": 17537,
+      "sha256": "955f9e70931407e534a3fe62e35cc70bcb4f46f45205eb7a305c9ef040647731"
     },
     {
       "path": "references/providers.md",
@@ -805,8 +805,13 @@
     },
     {
       "path": "references/r34-routes.md",
-      "bytes": 10116,
-      "sha256": "da646f2d8a01d7b2cad3563e2d27c2d3ed9cd48b1f382150ce0b264387f4a41c"
+      "bytes": 10195,
+      "sha256": "bbe87b0584e1a8402b308a027fd4afde79f28968b0846020aa822c22c3683b83"
+    },
+    {
+      "path": "references/r35-bluesky-web.md",
+      "bytes": 3536,
+      "sha256": "7744c28f73a886bec75d361264d104f8ff6875f0cf21377c74d892b84665717a"
     },
     {
       "path": "references/research-report-dom.md",
@@ -839,14 +844,19 @@
       "sha256": "a4de5e9c4d01cac5ca2ffed1480dce66140248ff419a04e42569d04f13d96e7d"
     },
     {
+      "path": "scripts/bluesky_web.py",
+      "bytes": 14049,
+      "sha256": "f348971fb211e394942c91d3eb8b4e3e894a5c1103f4d542d7f1c39ccb6355ab"
+    },
+    {
       "path": "scripts/capture_bridge.py",
       "bytes": 4272,
       "sha256": "5bc10eb7dde734e50d47087f49ff773c3068b93918b0ca4aec419babec9e85d5"
     },
     {
       "path": "scripts/context_sources.py",
-      "bytes": 28799,
-      "sha256": "ccfedf36b5b332dfd46479b3c46ede7957e83521343ffe2b4d71f7ca0dcdd69a"
+      "bytes": 31635,
+      "sha256": "0e73b199f063d71555252592689b54f69140be20f7f101cf61ee39030d771ed5"
     },
     {
       "path": "scripts/crawl4ai_reader.py",
@@ -919,6 +929,11 @@
       "sha256": "8275365b1c868aacbf44bcfdc1ccc38942530a808fe66cab80199b310961d927"
     },
     {
+      "path": "scripts/regression_bluesky_web.py",
+      "bytes": 6137,
+      "sha256": "db8782405c058ac8b752778be229487e92321f5667579da9f1ae6e5bb588ab84"
+    },
+    {
       "path": "scripts/report.py",
       "bytes": 15790,
       "sha256": "a93111f4e8a50b35a45450559bb352eab27d1d632d6b3bc3689f130d81d1f4f2"
@@ -975,8 +990,8 @@
     },
     {
       "path": "SKILL.md",
-      "bytes": 21512,
-      "sha256": "2dc7dafe5dde587b669dabe6e3566e8101346d2d2a34b3f1842839b6f5bfae80"
+      "bytes": 22057,
+      "sha256": "e0705688ca79c383959ba4c78fcad40a65cd72d4dd0c743dafa1fe6ab14fdb14"
     },
     {
       "path": "THIRD_PARTY_NOTICES/Crawl4AI-LICENSE.txt",

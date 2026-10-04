@@ -1,12 +1,18 @@
 # 实际集成清单
 
+## R35 Bluesky 网页路线（2026-10-04）
+
+- Reuses the installed OpenCLI 1.8.7 browser bridge (Apache-2.0) and the owner's existing login. FS supplies a small read-only DOM adapter through the existing `context` entry; it does not copy an API collector, extract session credentials or reimplement browser control. OpenCLI's own Bluesky `search` searches accounts, so it is not used as a post-search substitute.
+- Search and thread capture are bounded rendered samples. Hidden old screens are excluded, source URLs remain attached to posts, and full snapshots stay task-local behind short CLI summaries. See [r35-bluesky-web.md](r35-bluesky-web.md) for commands and actual acceptance status.
+- Linux.do is excluded from the owner's current expansion scope. Its old adapter and R34 failure record remain historical capabilities, not pending login work.
+
 ## R34 connected research routes (2026-10-04)
 
 - Direct optional runtime integration: FastEmbed 0.7.3 + multilingual MiniLM ONNX CPU for local semantic candidates; RapidOCR 3.9.2 + ONNX Runtime/PyMuPDF for selected-page OCR. Models/binaries remain in isolated runtimes, not vendored source. FS supplies bounded artifact/chunk handling, provenance and cache checks; it does not reimplement embeddings or OCR. PyMuPDF keeps its AGPL/commercial terms.
 - Documented API integration: Crossref/OpenAlex/Europe PMC/DataCite supply paper identity, OA links, bounded citation edges, exact resource relations and update metadata; GitHub REST supplies PR review/comment/file context; public Lemmy supplies actual search and paged replies; US Federal Register supplies publication metadata and raw text with official PDF links. FS owns the small standard-library adapters, not these services or their coverage.
 - Existing document/report/caption backends now connect through an explicit mixed material manifest, literal/semantic source lookup and one-shot saved-version diff. Video hits reuse captions/time links. No vector database, global scan, paid model or background monitor is added.
 - Existing completed ChatGPT research reports can be captured through visible native-browser DOM/source links and handed to a single-use loopback receiver without emitting the whole report into model context. A small semantic HTML importer retains raw capture, structure, citation mapping and hashes for offline report readers. This is FS-owned glue over the host UI and existing report backend; no session-token crawler or private backend API is adopted. One real report passed; malformed producer links remain warned and unverified.
-- The ordinary reader now rejects Google automated-query access interstitials during fetching and reuse, including old poisoned snapshots. Google Patents HTML remained inaccessible; selected publisher PDFs plus existing conversion and page OCR passed scoped original-reading checks. Linux.do still needs login; public Bluesky returned 403; GitHub Discussion coverage is unknown. None is reported as a completed platform-wide integration.
+- The ordinary reader now rejects Google automated-query access interstitials during fetching and reuse, including old poisoned snapshots. Google Patents HTML remained inaccessible; selected publisher PDFs plus existing conversion and page OCR passed scoped original-reading checks. R34's public Bluesky request returned 403 and Linux.do needed login; R35 adds a separate browser route and removes Linux.do from the owner's pending scope. GitHub Discussion coverage remains unknown.
 
 Commands, runtimes, licenses, caps and limits: [r34-routes.md](r34-routes.md). Current public acceptance: `docs/reviews/R34-RESULTS.md` in the source repository. R32/R28 statements below are historical trials, not a rollback of R34's newer scoped results.
 

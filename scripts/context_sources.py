@@ -125,6 +125,22 @@ def bsky_search(query: str, limit: int, timeout: float) -> dict:
             "upstream": {"meta": meta, "data": payload}}
 
 
+def bsky_web_search(query: str, limit: int, timeout: float, profile: str, max_scrolls: int = 0, sort: str = "top") -> dict:
+    from bluesky_web import search
+    try:
+        return search(query, limit, timeout, profile, max_scrolls, sort)
+    except (ValueError, RuntimeError, OSError) as exc:
+        raise SourceError(str(exc)) from None
+
+
+def bsky_web_thread(url: str, limit: int, timeout: float, profile: str) -> dict:
+    from bluesky_web import thread
+    try:
+        return thread(url, limit, timeout, profile)
+    except (ValueError, RuntimeError, OSError) as exc:
+        raise SourceError(str(exc)) from None
+
+
 def bsky_thread(uri: str, limit: int, timeout: float) -> dict:
     endpoint = "https://public.api.bsky.app/xrpc/app.bsky.feed.getPostThread?" + parse.urlencode({"uri": uri, "depth": 6, "parentHeight": 3})
     payload, meta = get_json(endpoint, timeout)
@@ -368,7 +384,7 @@ def short_summary(result: dict, out: str | None) -> dict:
     keep = ("complete", "partial", "requests_used", "request_budget", "post_limit", "returned_posts",
             "returned", "returned_comments", "reported_comments", "limit", "total_matches", "api_topic_count", "incomplete_reasons", "scope",
             "children_per_parent_limit", "reply_limit_requested", "output_parse", "api_version", "page", "next_page",
-            "more_available", "more_may_be_available")
+            "more_available", "more_may_be_available", "coverage", "returned_context", "sort", "max_scrolls", "empty")
     summary = {k: result.get(k) for k in ("status", "source", "url", "query", "title", "reason", "instance") if result.get(k) is not None}
     if "pull_request" in result:
         summary["pull_request"] = {k: (result["pull_request"] or {}).get(k) for k in ("number", "title", "state", "merged", "html_url")}
@@ -410,26 +426,50 @@ def main(argv=None) -> int:
     disc = sub.add_parser("community-search", help="search a public community source")
     common(disc)
     disc.add_argument("source", choices=("bluesky", "hn", "linux-do", "discourse", "lemmy")); disc.add_argument("query"); disc.add_argument("--limit", type=int, default=10)
-    disc.add_argument("--instance", choices=LEMMY_INSTANCES, default="lemmy.world"); disc.add_argument("--page", type=int, default=1)
+    disc.add_argument("--browser-profile", help="use visible Bluesky UI via OpenCLI; default uses public API")
+    disc.add_argument("--max-scrolls", type=int, default=0, help="Bluesky browser search only (0..3)")
+    disc.add_argument("--sort", choices=("top", "latest"), default="top", help="Bluesky browser search sort; latest uses the observed tab control")
+    disc.add_argument("--instance", choices=LEMMY_INSTANCES, default="lemmy.world", help="Lemmy only"); disc.add_argument("--page", type=int, default=1, help="Lemmy only")
     thread = sub.add_parser("community-thread", help="read a bounded public community thread")
     common(thread)
-    thread.add_argument("source", choices=("bluesky", "hn", "discourse", "lemmy")); thread.add_argument("id_or_uri"); thread.add_argument("--limit", type=int, default=20)
-    thread.add_argument("--instance", choices=LEMMY_INSTANCES, default="lemmy.world"); thread.add_argument("--page", type=int, default=1)
+    thread.add_argument("source", choices=("bluesky", "hn", "discourse", "lemmy")); thread.add_argument("id_or_uri"); thread.add_argument("--limit", type=int)
+    thread.add_argument("--instance", choices=LEMMY_INSTANCES, default="lemmy.world", help="Lemmy only"); thread.add_argument("--page", type=int, default=1, help="Lemmy only")
+    thread.add_argument("--browser-profile", help="use visible Bluesky UI via OpenCLI; default uses public API")
     gd = sub.add_parser("github-discussion", help="read a public GitHub discussion rendered page")
     common(gd)
     gd.add_argument("url")
     args = parser.parse_args(argv)
     if args.out and Path(args.out).exists():
         parser.error('output_exists_choose_new_path')
+    if args.command == "community-thread" and args.limit is None:
+        args.limit = 10 if args.browser_profile else 20
+    if getattr(args, "browser_profile", None) and (args.page != 1 or args.instance != "lemmy.world"):
+        parser.error("Bluesky browser route does not use Lemmy instance/page; use search max-scrolls for bounded loading")
     if (hasattr(args, "limit") and not 1 <= args.limit <= 100) or not 1 <= args.timeout <= 60 or (hasattr(args, "page") and not 1 <= args.page <= 1000):
         parser.error("limit must be 1..100, page 1..1000, and timeout 1..60 seconds")
     try:
         if args.command == "github-pr": result = github_pr(args.repo, args.number, args.limit, args.timeout)
         elif args.command == "community-search":
-            if args.source == "lemmy": result = lemmy_search(args.query, args.limit, args.timeout, args.instance, args.page)
+            if args.source == "bluesky" and args.browser_profile:
+                if not args.query.strip() or len(args.query) > 300 or not 1 <= args.limit <= 10 or not 0 <= args.max_scrolls <= 3:
+                    parser.error("Bluesky browser search requires nonempty query <=300 chars, limit 1..10, max-scrolls 0..3")
+                result = bsky_web_search(args.query, args.limit, args.timeout, args.browser_profile, args.max_scrolls, args.sort)
+            elif args.source == "bluesky" and (args.max_scrolls != 0 or args.sort != "top"):
+                parser.error("max-scrolls and non-default sort require --browser-profile")
+            elif args.source != "bluesky" and (args.browser_profile or args.max_scrolls != 0 or args.sort != "top"):
+                parser.error("browser-profile/max-scrolls/sort are supported only for Bluesky")
+            elif args.source == "lemmy": result = lemmy_search(args.query, args.limit, args.timeout, args.instance, args.page)
             else: result = {"bluesky": bsky_search, "hn": hn_search, "linux-do": opencli_linuxdo_search, "discourse": discourse_search}[args.source](args.query, args.limit, args.timeout)
         elif args.command == "github-discussion": result = github_discussion(args.url, args.timeout)
-        elif args.source == "bluesky": result = bsky_thread(args.id_or_uri, args.limit, args.timeout)
+        elif args.source == "bluesky":
+            if args.browser_profile:
+                if not 1 <= args.limit <= 10:
+                    parser.error("Bluesky browser thread limit must be 1..10")
+                result = bsky_web_thread(args.id_or_uri, args.limit, args.timeout, args.browser_profile)
+            else:
+                result = bsky_thread(args.id_or_uri, args.limit, args.timeout)
+        elif args.browser_profile:
+            parser.error("browser-profile is supported only for Bluesky")
         elif args.source == "discourse": result = discourse_thread(args.id_or_uri, args.limit, args.timeout)
         elif args.source == "lemmy": result = lemmy_thread(args.id_or_uri, args.limit, args.timeout, args.instance, args.page)
         else: result = hn_thread(args.id_or_uri, args.limit, args.timeout)

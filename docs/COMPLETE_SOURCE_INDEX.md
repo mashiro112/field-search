@@ -154,7 +154,7 @@ Every published original source file is listed below. Hashes refer to exact sour
 - [references/evidence.md](../references/evidence.md) — 8699 bytes; SHA256 `87b24acb8bca9b66d13a947c05deabb6160d26c8767ae1ae99eeb098b55d19fc`
 - [references/gemini-deep-research.md](../references/gemini-deep-research.md) — 3810 bytes; SHA256 `8c99f189de0a6e891028a39287c067b97aa49c6ef981c2fa22617ec354edce95`
 - [references/gemini-report.md](../references/gemini-report.md) — 3889 bytes; SHA256 `2d723865f32c279a6d7fbf682b065eed89da91fbd8e107ae3b86f99b90071c2f`
-- [references/integration-map.md](../references/integration-map.md) — 16637 bytes; SHA256 `8b7e134087322578a915f8b31aeb6a26a57ee731594929af145e480d3b30288c`
+- [references/integration-map.md](../references/integration-map.md) — 17537 bytes; SHA256 `955f9e70931407e534a3fe62e35cc70bcb4f46f45205eb7a305c9ef040647731`
 - [references/providers.md](../references/providers.md) — 21861 bytes; SHA256 `690c07ec94f4905e69b7f07b927dfa85dc226c54394e14458e48df9098a1b524`
 - [references/r24-routes.md](../references/r24-routes.md) — 6174 bytes; SHA256 `ec039ef7565f6ee3f06c929bc6ce736a27a3fec38b85eec61b6ce5820cf9fe51`
 - [references/r25-routes.md](../references/r25-routes.md) — 4196 bytes; SHA256 `815597590853932cf7cbe7dbb4ced197d27758bc5f540adcb6d593153d7e95ad`
@@ -162,15 +162,17 @@ Every published original source file is listed below. Hashes refer to exact sour
 - [references/r30-routes.md](../references/r30-routes.md) — 6607 bytes; SHA256 `66c5edc43a6384f2a1b86a4c31cc6c6a5e8ace77d03b8d008e26399294ae82d6`
 - [references/r31-routes.md](../references/r31-routes.md) — 4714 bytes; SHA256 `a253cf967d84ccf111c1ca0792d20497387468a26b452edccdb7c50fb1941428`
 - [references/r32-x-site.md](../references/r32-x-site.md) — 2264 bytes; SHA256 `e8621cb755f0c66a092ddda3f8a33c74e7fad7550a308c9259cc40276f7437db`
-- [references/r34-routes.md](../references/r34-routes.md) — 10116 bytes; SHA256 `da646f2d8a01d7b2cad3563e2d27c2d3ed9cd48b1f382150ce0b264387f4a41c`
+- [references/r34-routes.md](../references/r34-routes.md) — 10195 bytes; SHA256 `bbe87b0584e1a8402b308a027fd4afde79f28968b0846020aa822c22c3683b83`
+- [references/r35-bluesky-web.md](../references/r35-bluesky-web.md) — 3536 bytes; SHA256 `7744c28f73a886bec75d361264d104f8ff6875f0cf21377c74d892b84665717a`
 - [references/research-report-dom.md](../references/research-report-dom.md) — 4727 bytes; SHA256 `56999fc6ea760332fd2e115319d7e853c7d26c9c259c1ba0ee56fdb6bf6b0198`
 - [references/source-recipes.md](../references/source-recipes.md) — 3200 bytes; SHA256 `f50209e8d56856837eef5528884f2e2b8abc840655179639e37587b68bbdc76e`
 - [references/sources.md](../references/sources.md) — 3740 bytes; SHA256 `af5390c55cd51942681f62bce5e6aa66eae660b8b0c388466559f9d74596e0bd`
 - [scripts/academic_edges.py](../scripts/academic_edges.py) — 35739 bytes; SHA256 `28f87385091976de07b8594757374b1b092589f97acb76d6c80b82bd6ecfd985`
 - [scripts/batch.py](../scripts/batch.py) — 17013 bytes; SHA256 `cf140ba1e7b85de53aced5468968bb8606111c3ca43a1c47fdd8fb56f586b947`
 - [scripts/bilibili.py](../scripts/bilibili.py) — 31550 bytes; SHA256 `a4de5e9c4d01cac5ca2ffed1480dce66140248ff419a04e42569d04f13d96e7d`
+- [scripts/bluesky_web.py](../scripts/bluesky_web.py) — 14049 bytes; SHA256 `f348971fb211e394942c91d3eb8b4e3e894a5c1103f4d542d7f1c39ccb6355ab`
 - [scripts/capture_bridge.py](../scripts/capture_bridge.py) — 4272 bytes; SHA256 `5bc10eb7dde734e50d47087f49ff773c3068b93918b0ca4aec419babec9e85d5`
-- [scripts/context_sources.py](../scripts/context_sources.py) — 28799 bytes; SHA256 `ccfedf36b5b332dfd46479b3c46ede7957e83521343ffe2b4d71f7ca0dcdd69a`
+- [scripts/context_sources.py](../scripts/context_sources.py) — 31635 bytes; SHA256 `0e73b199f063d71555252592689b54f69140be20f7f101cf61ee39030d771ed5`
 - [scripts/crawl4ai_reader.py](../scripts/crawl4ai_reader.py) — 15461 bytes; SHA256 `037454c95118517f025b5e5e56b2baec2599010a2a1cf243d97e3bf812c79c4d`
 - [scripts/discourse.py](../scripts/discourse.py) — 14436 bytes; SHA256 `219becff274bd6ca3aa4926ff78c2d8eb700e04392a47aaa23d52265de09c53c`
 - [scripts/discover.py](../scripts/discover.py) — 13224 bytes; SHA256 `3889c9fb0ae80d9626dbcea4eac6fa5f964b36fe0cd6469f510f811915c8d9d2`
@@ -185,6 +187,7 @@ Every published original source file is listed below. Hashes refer to exact sour
 - [scripts/ocr_worker.py](../scripts/ocr_worker.py) — 3392 bytes; SHA256 `59fa1c33eedaa2515a081e8dbf1d7e4f0832f77d1956a369fcb1bdb16f506347`
 - [scripts/ocr.py](../scripts/ocr.py) — 7631 bytes; SHA256 `7ab17d788b9fb6ef70284b7118d6a25a5324cf5c807b35ae12950c7f6c46b497`
 - [scripts/recent.py](../scripts/recent.py) — 8225 bytes; SHA256 `8275365b1c868aacbf44bcfdc1ccc38942530a808fe66cab80199b310961d927`
+- [scripts/regression_bluesky_web.py](../scripts/regression_bluesky_web.py) — 6137 bytes; SHA256 `db8782405c058ac8b752778be229487e92321f5667579da9f1ae6e5bb588ab84`
 - [scripts/report.py](../scripts/report.py) — 15790 bytes; SHA256 `a93111f4e8a50b35a45450559bb352eab27d1d632d6b3bc3689f130d81d1f4f2`
 - [scripts/repository.py](../scripts/repository.py) — 21702 bytes; SHA256 `16d5a19bbabd071fc180bfa12d282efb2a4b84e059c4db28640020e00212e537`
 - [scripts/research_report.py](../scripts/research_report.py) — 13034 bytes; SHA256 `3e7cfc9150abe952de89efa9381a834a4abaa99e565d3cba7a5aea5eb7e20815`
@@ -196,5 +199,5 @@ Every published original source file is listed below. Hashes refer to exact sour
 - [scripts/video_worker.py](../scripts/video_worker.py) — 7119 bytes; SHA256 `65792e667aed2a6e1c1aa26202b85fe36a2391cc16a5fe9346a7d89ce17523da`
 - [scripts/video.py](../scripts/video.py) — 10471 bytes; SHA256 `b936ee62668ce78a747f47e22ab5f78e2fff0859c38d61d947edb902a34d8ccd`
 - [scripts/xiaohongshu.py](../scripts/xiaohongshu.py) — 10380 bytes; SHA256 `8cf4732ba0ed4032cb5634bf323ea671c76881921f2624a31d4331e0f468e994`
-- [SKILL.md](../SKILL.md) — 21512 bytes; SHA256 `2dc7dafe5dde587b669dabe6e3566e8101346d2d2a34b3f1842839b6f5bfae80`
+- [SKILL.md](../SKILL.md) — 22057 bytes; SHA256 `e0705688ca79c383959ba4c78fcad40a65cd72d4dd0c743dafa1fe6ab14fdb14`
 - [THIRD_PARTY_NOTICES/Crawl4AI-LICENSE.txt](../THIRD_PARTY_NOTICES/Crawl4AI-LICENSE.txt) — 9998 bytes; SHA256 `193fe32704bee15cd74f5153e569cdf830e26445e19798a55daee32da40758aa`

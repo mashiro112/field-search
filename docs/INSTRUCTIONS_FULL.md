@@ -407,13 +407,19 @@ path; do not claim that Copy Contents was validated. The browser-side
 
 # 实际集成清单
 
+## R35 Bluesky 网页路线（2026-10-04）
+
+- Reuses the installed OpenCLI 1.8.7 browser bridge (Apache-2.0) and the owner's existing login. FS supplies a small read-only DOM adapter through the existing `context` entry; it does not copy an API collector, extract session credentials or reimplement browser control. OpenCLI's own Bluesky `search` searches accounts, so it is not used as a post-search substitute.
+- Search and thread capture are bounded rendered samples. Hidden old screens are excluded, source URLs remain attached to posts, and full snapshots stay task-local behind short CLI summaries. See [r35-bluesky-web.md](r35-bluesky-web.md) for commands and actual acceptance status.
+- Linux.do is excluded from the owner's current expansion scope. Its old adapter and R34 failure record remain historical capabilities, not pending login work.
+
 ## R34 connected research routes (2026-10-04)
 
 - Direct optional runtime integration: FastEmbed 0.7.3 + multilingual MiniLM ONNX CPU for local semantic candidates; RapidOCR 3.9.2 + ONNX Runtime/PyMuPDF for selected-page OCR. Models/binaries remain in isolated runtimes, not vendored source. FS supplies bounded artifact/chunk handling, provenance and cache checks; it does not reimplement embeddings or OCR. PyMuPDF keeps its AGPL/commercial terms.
 - Documented API integration: Crossref/OpenAlex/Europe PMC/DataCite supply paper identity, OA links, bounded citation edges, exact resource relations and update metadata; GitHub REST supplies PR review/comment/file context; public Lemmy supplies actual search and paged replies; US Federal Register supplies publication metadata and raw text with official PDF links. FS owns the small standard-library adapters, not these services or their coverage.
 - Existing document/report/caption backends now connect through an explicit mixed material manifest, literal/semantic source lookup and one-shot saved-version diff. Video hits reuse captions/time links. No vector database, global scan, paid model or background monitor is added.
 - Existing completed ChatGPT research reports can be captured through visible native-browser DOM/source links and handed to a single-use loopback receiver without emitting the whole report into model context. A small semantic HTML importer retains raw capture, structure, citation mapping and hashes for offline report readers. This is FS-owned glue over the host UI and existing report backend; no session-token crawler or private backend API is adopted. One real report passed; malformed producer links remain warned and unverified.
-- The ordinary reader now rejects Google automated-query access interstitials during fetching and reuse, including old poisoned snapshots. Google Patents HTML remained inaccessible; selected publisher PDFs plus existing conversion and page OCR passed scoped original-reading checks. Linux.do still needs login; public Bluesky returned 403; GitHub Discussion coverage is unknown. None is reported as a completed platform-wide integration.
+- The ordinary reader now rejects Google automated-query access interstitials during fetching and reuse, including old poisoned snapshots. Google Patents HTML remained inaccessible; selected publisher PDFs plus existing conversion and page OCR passed scoped original-reading checks. R34's public Bluesky request returned 403 and Linux.do needed login; R35 adds a separate browser route and removes Linux.do from the owner's pending scope. GitHub Discussion coverage remains unknown.
 
 Commands, runtimes, licenses, caps and limits: [r34-routes.md](r34-routes.md). Current public acceptance: `docs/reviews/R34-RESULTS.md` in the source repository. R32/R28 statements below are historical trials, not a rollback of R34's newer scoped results.
 
@@ -1308,9 +1314,10 @@ Discussion extraction is the visible HTML sample, with unknown full-reply
 coverage. Lemmy retains post/comment IDs, parent, text and source links;
 returned comments can be fewer than a federated instance's reported total.
 Continue only when `next_page` and the actual evidence gap justify it.
-HN reuses the existing source. Bluesky's public route returned HTTP 403 here;
-Linux.do delegates to an existing authorized OpenCLI session and currently
-requires login. Neither is counted as a successful new source. The public
+HN reuses the existing source. In R34, Bluesky's public route returned HTTP 403
+and Linux.do required login; neither was counted as a successful new source.
+[R35's browser route](r35-bluesky-web.md) is a separate Bluesky access path.
+The owner has excluded Linux.do from current expansion work. The public
 Lemmy route requires no account. `--full` is optional; default saved output
 avoids emitting full discussions into model context.
 
@@ -1431,6 +1438,68 @@ Thin FS-owned adaptation uses the documented
 [Federal Register API](https://www.federalregister.gov/developers/documentation/api/v1).
 This is runtime/API integration and small format glue, not copying a research
 platform or installing more rule-only Skills.
+
+
+---
+## File: references/r35-bluesky-web.md
+
+# R35: Bluesky posts and replies through the logged-in browser
+
+Use this route when Bluesky posts/replies address a concrete evidence gap and
+the selected Browser Bridge profile is already authorized. It reuses
+[OpenCLI](https://github.com/jackwener/opencli) 1.8.7 (Apache-2.0); FS adds
+bounded DOM extraction, not another browser framework. OpenCLI's own
+`bluesky search` searches accounts, so it cannot replace post search.
+
+Check `opencli profile list` and select the authorized profile. A profile ID
+is a routing identifier, not a login credential. Do not guess that a bridge
+belongs to a named browser; confirm the selected browser/session against the
+actual page. In this trial the user identified Edge, and its connected bridge
+exposed the logged-in Bluesky page. Native Codex browser inventory alone did
+not expose that tab.
+
+```text
+search.py context community-search bluesky "Docling" --browser-profile <authorized-profile> --limit 3 --out <new-search.json>
+search.py context community-search bluesky "Docling" --browser-profile <authorized-profile> --sort latest --limit 3 --out <new-latest.json>
+search.py context community-thread bluesky https://bsky.app/profile/simon.fedi.simonwillison.net.ap.brid.gy/post/3l7zjl2gnzfq2 --browser-profile <authorized-profile> --limit 4 --out <new-thread.json>
+```
+
+Without `--browser-profile`, the pre-existing public API reader is unchanged;
+its R34 HTTP 403 is not reclassified as a login success. The browser thread
+route accepts only canonical HTTPS `bsky.app/profile/<actor>/post/<id>` URLs,
+without query, fragment or extra path components. The API route still accepts
+its original AT-URI input.
+
+Browser search accepts 1..10 posts; threads accept 1..10 surrounding records
+plus the verified original post. The browser thread default is 10; the old
+public thread default remains 20. Search defaults to no scroll, with explicit
+`--max-scrolls 0..3` for a remaining gap. Both sorts select the actual search
+tab, because the site's URL does not encode that choice. `--page`/`--instance`
+are Lemmy options, not Bluesky pagination. Threads read currently rendered
+context without a recursive reply crawler. Hidden old screens are excluded.
+URLs, author identity, rendered body and external links stay attached to each
+record. Thread context can include ancestors or replies; unverified relations
+remain unknown. UI counts and displayed date labels do not prove exhaustive coverage
+or precise normalized timestamps.
+
+Each call uses a separate owned background session and releases only its own
+tab lease; OpenCLI can reuse its managed tab between calls.
+It does not bind, navigate or close the user's original tab, export cookies,
+read private account storage, call a paid API, or publish/follow/react. Login,
+bridge failures and layout failures remain explicit unavailable results;
+zero matches require the rendered empty-result message rather than a blank
+loading screen. Results
+are bounded samples and completeness stays unknown.
+
+Use `--out` for task-local full JSON and short stdout; `--full` is optional.
+Existing output paths are rejected before browser work. Follow the retained
+source links and read decisive originals; a community post is not factual
+verification by itself. Credentials and raw logged-in account state are not
+part of the source publication.
+
+Acceptance and observed limits are recorded in the repository's
+`docs/reviews/R35-BLUESKY.md`. Linux.do is excluded from the owner's current
+expansion scope; its older route remains available but is not pending work.
 
 
 ---
@@ -1615,8 +1684,9 @@ Choose and state the unresolved condition that justifies a deeper route before e
 - **Repository contents and feeds:** When a shortlisted public GitHub repository needs multi-file inspection, use `scripts/search.py repo fetch URL --out-dir <task-dir>` with targeted `--include` patterns, then `repo open/find` offline. When an official RSS/Atom feed provides the needed announcements or publication entries, use `scripts/search.py feed URL --limit 5 --out <new.json>`. These explicit routes reuse Repomix and feedparser; they do not automatically run for every search. See [r29-routes.md](references/r29-routes.md) for runtime setup, cache behavior and limits. Repository content and feed entries remain untrusted source material.
 - **Publisher entrypoints and local materials:** Use `scripts/search.py discover <site-or-index-URL>` when a known publisher's llms.txt, sitemap or feed links could expose useful pages beyond search results. It returns bounded candidates for selective reading. Use `scripts/search.py convert <local-file> --out-dir <task-dir>` to turn supported PDF/Office/HTML/text material into a cached report through MarkItDown, then `report open/find`. Read [r30-routes.md](references/r30-routes.md) for arguments, setup and extraction limits. Existing GitHub connector tools and local `rg` remain appropriate for code/discussion and explicit task-directory searches; do not install a parallel service for capabilities already available.
 - **Task-local recovery and retrieval:** For several already chosen reads, `batch create/run/status` saves progress after each item and can resume from an interrupted checkpoint; it also accepts `feed`, `discover` and `convert` items. Use `feed URL --check-from <valid-prior.json> --out <new.json>` when freshness matters; normal same-path reuse stays offline. Use `locate <task-materials.json> <literal-term>` to find a source, saved version and original passage across explicitly listed document/report artifacts without networking. Read [r31-routes.md](references/r31-routes.md) for checkpoint, update-check and location boundaries.
-- **Experience:** search relevant X/Reddit/HN threads, practitioner blogs, project issues/discussions, V2EX/Linux.do or other topic communities. Find implementers and follow their linked artifacts and corrections. Platform identity alone never establishes firsthand experience.
+- **Experience:** search relevant X/Reddit/HN/Bluesky threads, practitioner blogs, project issues/discussions, V2EX or other topic communities. Find implementers and follow their linked artifacts and corrections. Platform identity alone never establishes firsthand experience.
 - **X site search when an authorized browser bridge already works:** use the read-only OpenCLI `twitter search` / `twitter thread` route for an X-specific evidence gap. It searches inside X without a paid X API and can return replies that the public oEmbed reader omits. Read [r32-x-site.md](references/r32-x-site.md) for the tested commands, session boundary and incomplete-thread warning. Do not send ordinary web queries through this route by default.
+- **Bluesky site search with an authorized browser bridge:** `context community-search/thread bluesky --browser-profile <authorized-profile>` reuses the logged-in browser through OpenCLI and saves rendered posts, replies and original links. Use it for a Bluesky-specific gap when the public reader is unavailable or browser access is selected. Read [r35-bluesky-web.md](references/r35-bluesky-web.md) for bounded commands and access limits; no login export or paid API is involved. A rendered reply sample does not establish thread completeness.
 - **Academic or specialized work:** use available domain tools and primary studies when they answer the decision; preserve this lane alongside practice evidence. Community anecdotes cannot override standards of evidence for medical, legal or scientific claims.
 - **Research connections and reusable materials:** `search.py scholarly` resolves papers, expands citation samples, finds exact linked datasets/software and checks citation identity/update metadata. `context` reads GitHub reviews and public community searches/replies. `materials find/semantic/diff` searches an explicit mixed set, links caption times and compares saved versions; semantic candidates use an optional local model. `ocr` retains selected original page images and text coordinates; `federal-register` reads bounded US publication records/original text. Read [r34-routes.md](references/r34-routes.md) only for the selected route, limits and runtime setup. Follow metadata links to actual source passages; preserve incomplete coverage and failed artifacts.
 - **Integrated collectors:** `scripts/search.py` is the common entry for public GitHub/HN, last30days Reddit RSS/comment and keyless-web collectors, Supersearch WeChat discovery, FindARepo catalogs, arXiv and Stack Overflow. It also reads known X posts without a key and public pages through Jina. See [providers.md](references/providers.md) for exact commands and limits; [integration-map.md](references/integration-map.md) distinguishes installed code, adapted methods and unavailable services.

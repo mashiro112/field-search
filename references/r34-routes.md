@@ -44,9 +44,10 @@ Discussion extraction is the visible HTML sample, with unknown full-reply
 coverage. Lemmy retains post/comment IDs, parent, text and source links;
 returned comments can be fewer than a federated instance's reported total.
 Continue only when `next_page` and the actual evidence gap justify it.
-HN reuses the existing source. Bluesky's public route returned HTTP 403 here;
-Linux.do delegates to an existing authorized OpenCLI session and currently
-requires login. Neither is counted as a successful new source. The public
+HN reuses the existing source. In R34, Bluesky's public route returned HTTP 403
+and Linux.do required login; neither was counted as a successful new source.
+[R35's browser route](r35-bluesky-web.md) is a separate Bluesky access path.
+The owner has excluded Linux.do from current expansion work. The public
 Lemmy route requires no account. `--full` is optional; default saved output
 avoids emitting full discussions into model context.
 
