@@ -53,6 +53,16 @@ def digest(text):
     return hashlib.sha256(text.encode('utf-8')).hexdigest()
 
 
+def reader_access_gate(body, raw=''):
+    """Recognize short access interstitials, retaining normal articles about them."""
+    gate = re.search(r'(?im)^(?:title:\s*)?(?:access denied|just a moment|sign in to continue|verify you are human|captcha required|请输入验证码|安全验证)\s*[.!…]*$', body[:2000] + '\n' + raw[:300])
+    google_gate = (len(body) < 1500 and
+                   re.search(r"(?im)^\s*(?:#{1,6}\s*)?we(?:'|’)re sorry[.!…]*\s*$", body) and
+                   'may be sending automated queries' in body.casefold() and
+                   "can't process your request right now" in body.casefold())
+    return bool(gate or google_gate or any(x in body for x in ('此验证码用于', '需要您协助验证', '请完成验证')))
+
+
 def fetch_document(url, timeout, capture=None, reader='jina', wait_css=None,
                    wait_timeout=None, include_links=False):
     validate_url(url)
@@ -78,8 +88,7 @@ def fetch_document(url, timeout, capture=None, reader='jina', wait_css=None,
     body = raw.split('Markdown Content:', 1)[-1].strip()
     # Guard actual access interstitials; ordinary articles discussing CAPTCHA are
     # not themselves a gate. Keep this conservative and surface uncertain content.
-    gate = re.search(r'(?im)^(?:title:\s*)?(?:access denied|just a moment|sign in to continue|verify you are human|captcha required|请输入验证码|安全验证)\s*[.!…]*$', body[:2000] + '\n' + raw[:300])
-    if gate or any(x in body for x in ('此验证码用于', '需要您协助验证', '请完成验证')):
+    if reader_access_gate(body, raw):
         raise ValueError('access_gate_in_reader_response')
     warnings = ['Third-party public extraction; not independent corroboration or proof of completeness.']
     extraction = 'jina_markdown'
@@ -108,6 +117,8 @@ def load_document(path):
     validate_url(doc['url'])
     if digest(doc['content']) != doc.get('content_sha256'):
         raise ValueError('snapshot_content_hash_mismatch')
+    if reader_access_gate(doc['content'], doc.get('raw', '')):
+        raise ValueError('access_gate_in_reader_response')
     return doc
 
 

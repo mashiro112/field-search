@@ -5,7 +5,17 @@ plan/Start, completion and bounded reading of the completed report are verified
 on this Windows host. The UI reported 12 minutes and 15 sources. Automatic local
 file transfer is NOT accepted: Markdown export produced no retrievable file or
 download event, and official Copy returned an empty browser clipboard. This is
-a partial integration, not the same completed export/cache path as Gemini R27.
+a partial integration in that historical R28 trial.
+
+R34 (2026-10-04) closes the tested local-report transfer gap through a different
+supported route: rendered report DOM plus its visible source panel, a one-shot
+loopback form handoff and `research-report` import. One existing completed report
+passed body-ending, 18 headings, 4 tables/147 cells, 76 citation positions and
+15 source-index mappings; offline report open/find and reuse passed. One malformed
+producer URL is preserved with a warning, not silently repaired. The official
+export/Copy and OpenCLI result routes still failed here. Use
+[research-report-dom.md](research-report-dom.md) for the actual capture recipe,
+cost boundary and private artifact handling. Transfer is not fact validation.
 
 ## Use and cost
 
@@ -39,25 +49,23 @@ by default. A short prompt does not guarantee a short job or no quota use.
    at low frequency. Avoid repeated full DOM/report output; use compact status
    observations and deterministic waits. Generic chat Stop/thinking indicators
    do not establish research progress. Keep and resume the same conversation.
-6. Require an actual completed report, then prefer one official Markdown export
-   or Copy contents. Compare body ending, headings/tables and usable source URLs.
+6. Require an actual completed report. Use a working official Markdown export
+   or Copy contents when available. Compare body ending, headings/tables and usable source URLs.
    Opaque citation tokens alone are not preserved citations. Native thread reads
    are useful only if they expose the actual report, not just an acknowledgement.
    Do not invent private backend endpoints or extract browser credentials.
-   On this host, do not repeatedly retry the known export/clipboard gap. The
-   supported fallback is bounded reading of rendered headings/tables/paragraphs
-   from the completed report's nested iframe through the native browser. Provide
-   a substantive answer with the retained conversation link and inspected source
-   URLs, but explicitly state that a complete local report and paragraph-level
-   citation mapping were not preserved. The R28 DOM exposed numbered citation
-   controls and textual URLs in a source table, but no ordinary anchor links.
-7. Save the retrieved text once, then reuse `search.py report import <local.md>
-   --out-dir <task-report-dir> --method copy|local_file --source-url <canonical-url>`.
-   Use `report open/find` for bounded reads. Keep any source list separately if
-   needed and identify missing links honestly. Return the answer to the research
+   On this host, choose the tested [rendered-report capture with visible
+   source-panel mapping](research-report-dom.md), without repeating the known
+   export/clipboard failure. Its source links and citation indices remain
+   untrusted report data. If any body/structure/mapping cannot be retained,
+   report that actual incomplete scope; do not infer success from the job state.
+7. Save the real capture once through the one-shot local `capture` receiver,
+   then `research-report <capture.json> --out-dir <private-archive>` and offline
+   `report open/find`. A working official Markdown export can instead use
+   `report import <local.md> --out-dir <task-report-dir> --method copy|local_file`.
+   Keep its canonical source URL and identify missing/invalid links honestly. Return the answer to the research
    question, decisive sources, report path and remaining uncertainty. Report
-   transfer is not factual validation. This local-file step remains pending for
-   R28; never import an empty export or label a model-written summary as the
+   transfer is not factual validation. Never import an empty export or label a model-written summary as the
    exact retrieved original.
 
 ## Reuse assessment

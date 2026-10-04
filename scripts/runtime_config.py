@@ -71,9 +71,11 @@ def _validate(data: Any) -> dict[str, Any]:
                     _validate_string(value, f"runtime_{key}")
                 elif isinstance(value, dict):
                     for nested_key in value:
-                        if nested_key != "python_path":
-                            raise ConfigError("runtime_entry_only_allows_python_path")
+                        if nested_key not in {"python_path", "model_dir"}:
+                            raise ConfigError("runtime_entry_only_allows_python_path_and_model_dir")
                     _validate_string(value.get("python_path"), f"runtime_{key}_python_path")
+                    if "model_dir" in value:
+                        _validate_string(value["model_dir"], f"runtime_{key}_model_dir")
                 else:
                     raise ConfigError("runtime_entry_must_be_path_or_object")
             else:

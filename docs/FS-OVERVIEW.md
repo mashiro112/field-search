@@ -2,19 +2,21 @@
 
 更新：2026-10-04。此页连接当前源码、历史证据与新科研流程；状态以各层的实际证据范围区分。
 
-当前执行：用户已接受 [R33 全部 13 条分支](reviews/R33-EXPLORATION-MENU.md)。[R34 接入与验收](reviews/R34-IMPLEMENTATION.md)逐项定义真实样本、来源追溯和失败条件；科研、项目/社区与材料查找并行推进，另验证已完成 ChatGPT 报告取回和小型 CPU OCR。此节点仍在执行中，不能把分工或候选探测当成交付；公开源码基线仍为 185 文件及 R32 已验收状态。
+最新交付：[R34 全部 13 条分支的接入与限定验收](reviews/R34-RESULTS.md)，对应用户选定的 [R33 方向](reviews/R33-EXPLORATION-MENU.md)及[验收约定](reviews/R34-IMPLEMENTATION.md)。新增实际入口覆盖论文/引用/关联数据、GitHub 评审与公开 Lemmy、混合材料查找和本地语义检索、视频时间点、页面 OCR、一次变化比较及专项原文读取；已有 ChatGPT 报告现可原文归档并离线查询，18 标题、4 表/147 单元格、76 处引用对应 15 来源已核对。源码清单为 196 文件；[使用说明](../references/r34-routes.md)区分成熟组件直连与 FS 的薄适配。
 
-最新交付：[R32 九分支真实试验与 X 站内搜索路线](reviews/R32-RESULTS.md)。在已有授权浏览器桥接可用时，FS 可直接用已安装的 OpenCLI 只读搜索 X 和读取回复；两组真实搜索/讨论通过，回复总量和截断仍未知，不能称为完整抓取。其余八分支留下真实失败与成本依据，未默认接入。源码/指令清单为 185 文件；[首阶段记录](reviews/R32-PHASE-1.md)保留为过程证据。
+当前边界：Linux.do 尚需登录，Bluesky 本轮 403，Discussion 回复完整性未知；OCR 提供原图定位，历史竖排、表格和公式不保证忠实重建。Google Patents 网页返回验证提示，已有 PDF 转换加选页 OCR 可用；论文元数据、引用关系、法律和专利信息都不能替代具体原文判断。R34 关闭了 R28 本机报告传输缺口，官方导出/Copy 和 OpenCLI 获取结果仍失败。FS03 科研 SOP 保持独立、待真实任务试跑。
+
+此前交付：[R32 九分支真实试验与 X 站内搜索路线](reviews/R32-RESULTS.md)。在已有授权浏览器桥接可用时，FS 可直接用已安装的 OpenCLI 只读搜索 X 和读取回复；两组真实搜索/讨论通过，回复总量和截断仍未知，不能称为完整抓取。其余八分支留下真实失败与成本依据，未默认接入。源码/指令清单为 185 文件；[首阶段记录](reviews/R32-PHASE-1.md)保留为过程证据。
 
 R32 的[九分支选型](reviews/R32-EXPANSION-RESEARCH.md)和[Goal Prompt](reviews/R32-GOAL-PROMPT.md)说明探索意图，最终采用与未采用以结果报告为准。Context7 版本污染、Docling 数值错误、ASR 混合语种失准及多页抓取超时都未被包装成新能力；FS03 科研流程仍独立。
 
-最新交付：[R31 中断恢复、订阅源更新与原文找回](reviews/R31-EVIDENCE-REUSE.md)。[14 分支计划](reviews/R31-EVIDENCE-REUSE-PLAN.md)已完成取舍：批处理逐项保存、Feed 条件更新检查、`locate` 跨已保存材料找回来源和原文位置。真实混合批次、RSS 304 和离线材料查询已验收；当前源码清单为 184 文件。
+此前交付：[R31 中断恢复、订阅源更新与原文找回](reviews/R31-EVIDENCE-REUSE.md)。[14 分支计划](reviews/R31-EVIDENCE-REUSE-PLAN.md)已完成取舍：批处理逐项保存、Feed 条件更新检查、`locate` 跨已保存材料找回来源和原文位置。真实混合批次、RSS 304 和离线材料查询已验收；当前源码清单为 184 文件。
 
 此前交付：[R30 扩展探索](reviews/R30-EXPANDED-DISCOVERY.md)。比较八类能力后，新增站点入口发现和 MarkItDown 0.1.8 本地材料转换；真实站点、代表性文件、离线复用与关键失败条件已验收。正文读取现可复用配置中的既有运行环境，衔接发现的链接。R30 当时源码清单为 182 文件；候选取舍与提取限制见结果。
 
 此前交付：[R29 仓库内容读取与 RSS／Atom](reviews/R29-REUSABLE-ROUTES.md)。实际接入 Repomix 1.18.1 和 feedparser 6.0.14，增加 repo fetch/open/find 与 feed 命令；真实仓库、RSS、Atom、离线缓存与冲突/损坏反例已验收。独立复查发现的 Windows Unicode 输出缺陷已修复并重跑。R29 当时源码清单为 178 文件；依赖版本锁定、限制与源级失败见结果文档。
 
-当前部分接入：[R28 ChatGPT 网页 Deep Research 与非付费 X 搜索](reviews/R28-CHATGPT-WEB-RESEARCH.md)。已实测研究入口、计划、自动开始、完成及页面正文读取；Markdown 下载未返回文件，复制返回空内容，本地完整归档尚未验收；已重跑 X 网页索引发现和 oEmbed 读取，长帖仍截断。新增路线明确标注部分可用，R28 当时源码清单为 174 文件。
+历史部分接入：[R28 ChatGPT 网页 Deep Research 与非付费 X 搜索](reviews/R28-CHATGPT-WEB-RESEARCH.md)。已实测研究入口、计划、自动开始、完成及页面正文读取；Markdown 下载未返回文件，复制返回空内容，当时本地完整归档未验收，R34 已接上不同的 DOM 路线；已重跑 X 网页索引发现和 oEmbed 读取，长帖仍截断。新增路线明确标注部分可用，R28 当时源码清单为 174 文件。
 
 此前完整网页交付：[R27 自动发起并取回 Gemini Deep Research](reviews/R27-GEMINI-DEEP-RESEARCH.md)。单个真实任务已由代理完成提交、计划核对与启动、等待、官方 Docs 导出、Drive 取回和本地读取。新增的是 FS 的原生浏览器工作流，复用 R26 后段；173 文件源码/指令清单同步。用户无需负责点击开始或手工导出，登录验证和额度等实际节点仍可能需人工处理。
 

@@ -536,6 +536,13 @@ def _run_document(command, config_path=None):
 
 
 def main(argv=None):
+    routes = {'scholarly': 'scholarly', 'context': 'context_sources',
+              'materials': 'material_set', 'ocr': 'ocr', 'federal-register': 'specialist',
+              'research-report': 'research_report', 'capture': 'capture_bridge'}
+    selected = argv if argv is not None else sys.argv[1:]
+    if selected and selected[0] in routes:
+        import importlib
+        return importlib.import_module(routes[selected[0]]).main(selected[1:])
     argv = list(sys.argv[1:] if argv is None else argv)
     # One public helper entry; delegate to the existing engines without copying
     # their planning, pagination or upstream configuration logic.
@@ -576,7 +583,10 @@ def main(argv=None):
     if argv and argv[0] == 'batch':
         import batch
         return batch.main(argv[1:])
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(description=__doc__, epilog=
+        'Additional explicit routes (use ROUTE --help): recent, document, report, '
+        'repo, feed, discover, convert, locate, batch, video, discourse, xiaohongshu, '
+        'academic-edges, scholarly, context, materials, ocr, federal-register, research-report, capture.')
     parser.add_argument('command', choices=('doctor', 'search', 'read'))
     parser.add_argument('query', nargs='?')
     parser.add_argument('--query-file', help='UTF-8 literal query file; avoids shell interpolation')

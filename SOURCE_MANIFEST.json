@@ -1,7 +1,7 @@
 {
-  "snapshot_date": "2026-09-23",
+  "snapshot_date": "2026-10-04",
   "description": "Exact installed source snapshot; caches and runtime artifacts excluded.",
-  "file_count": 185,
+  "file_count": 196,
   "files": [
     {
       "path": "agents/openai.yaml",
@@ -740,8 +740,8 @@
     },
     {
       "path": "references/chatgpt-deep-research.md",
-      "bytes": 5866,
-      "sha256": "e1cc689423c51437823d60f0da90dc40acfcbb183bd5e0224e8c7ece6906e816"
+      "bytes": 6433,
+      "sha256": "cf78ac9bbe1e9d53c99da9b8a17931d5bb99e350e3ec2dc1941fef13b5a622c6"
     },
     {
       "path": "references/crawl4ai-runtime-r4.md",
@@ -765,8 +765,8 @@
     },
     {
       "path": "references/integration-map.md",
-      "bytes": 14228,
-      "sha256": "a75f2f2ff9b46e9cfafbac8a3238f928b940e5fc8263237c62f1a6d9a0803ee0"
+      "bytes": 16637,
+      "sha256": "8b7e134087322578a915f8b31aeb6a26a57ee731594929af145e480d3b30288c"
     },
     {
       "path": "references/providers.md",
@@ -804,6 +804,16 @@
       "sha256": "e8621cb755f0c66a092ddda3f8a33c74e7fad7550a308c9259cc40276f7437db"
     },
     {
+      "path": "references/r34-routes.md",
+      "bytes": 10116,
+      "sha256": "da646f2d8a01d7b2cad3563e2d27c2d3ed9cd48b1f382150ce0b264387f4a41c"
+    },
+    {
+      "path": "references/research-report-dom.md",
+      "bytes": 4727,
+      "sha256": "56999fc6ea760332fd2e115319d7e853c7d26c9c259c1ba0ee56fdb6bf6b0198"
+    },
+    {
       "path": "references/source-recipes.md",
       "bytes": 3200,
       "sha256": "f50209e8d56856837eef5528884f2e2b8abc840655179639e37587b68bbdc76e"
@@ -829,6 +839,16 @@
       "sha256": "a4de5e9c4d01cac5ca2ffed1480dce66140248ff419a04e42569d04f13d96e7d"
     },
     {
+      "path": "scripts/capture_bridge.py",
+      "bytes": 4272,
+      "sha256": "5bc10eb7dde734e50d47087f49ff773c3068b93918b0ca4aec419babec9e85d5"
+    },
+    {
+      "path": "scripts/context_sources.py",
+      "bytes": 28799,
+      "sha256": "ccfedf36b5b332dfd46479b3c46ede7957e83521343ffe2b4d71f7ca0dcdd69a"
+    },
+    {
       "path": "scripts/crawl4ai_reader.py",
       "bytes": 15461,
       "sha256": "037454c95118517f025b5e5e56b2baec2599010a2a1cf243d97e3bf812c79c4d"
@@ -845,8 +865,8 @@
     },
     {
       "path": "scripts/document.py",
-      "bytes": 14043,
-      "sha256": "1ab7f080735ecf7252d2df39139dece3cdfbf07d4b6b2967c2b7157b99b61ef7"
+      "bytes": 14646,
+      "sha256": "76d3686151a31c1336138e4ddeb269c7e4579b08ebc3c9249e2ea77cfc9110b5"
     },
     {
       "path": "scripts/feed_worker.py",
@@ -869,6 +889,11 @@
       "sha256": "15b90bf968f86f3e9e1dd08ab8eadf46f7122ddf5394865eff92919ed599a1ae"
     },
     {
+      "path": "scripts/material_set.py",
+      "bytes": 16374,
+      "sha256": "f645ac5b2411c4a459651b542f8f22cf205ab8eb23bad1e3fe9a4e213d62f99e"
+    },
+    {
       "path": "scripts/material_worker.py",
       "bytes": 3159,
       "sha256": "57f87c5d0d50d880b529e4ac9492a8f14eb21ea5bb979ccbc2e0b45bc5315dc7"
@@ -877,6 +902,16 @@
       "path": "scripts/material.py",
       "bytes": 16731,
       "sha256": "9e2d029873371010714421f49818b7ff9126134a71b6fb89148818746a4def95"
+    },
+    {
+      "path": "scripts/ocr_worker.py",
+      "bytes": 3392,
+      "sha256": "59fa1c33eedaa2515a081e8dbf1d7e4f0832f77d1956a369fcb1bdb16f506347"
+    },
+    {
+      "path": "scripts/ocr.py",
+      "bytes": 7631,
+      "sha256": "7ab17d788b9fb6ef70284b7118d6a25a5324cf5c807b35ae12950c7f6c46b497"
     },
     {
       "path": "scripts/recent.py",
@@ -894,14 +929,34 @@
       "sha256": "16d5a19bbabd071fc180bfa12d282efb2a4b84e059c4db28640020e00212e537"
     },
     {
+      "path": "scripts/research_report.py",
+      "bytes": 13034,
+      "sha256": "3e7cfc9150abe952de89efa9381a834a4abaa99e565d3cba7a5aea5eb7e20815"
+    },
+    {
       "path": "scripts/runtime_config.py",
-      "bytes": 5528,
-      "sha256": "363f8562cdbe70dc5de3efbe7ff783a4250fded7ae975eb00a34ee2789385195"
+      "bytes": 5695,
+      "sha256": "99345a843302b06074d8d8a87e12049b42e1c1a19a6cb203625ac32215a731d1"
+    },
+    {
+      "path": "scripts/scholarly.py",
+      "bytes": 23446,
+      "sha256": "e0fa600c75fb8fd24bc4e4a3b26387651edd895b80c478ff833009f853595a31"
     },
     {
       "path": "scripts/search.py",
-      "bytes": 35700,
-      "sha256": "f226e76015cce4d210da7fab3e64919b05ab48af8db62fa22cfc44542218a00d"
+      "bytes": 36434,
+      "sha256": "7b5d3802395aee2c4739f812f71ec2ccf6d646c4d9b1d7b96099cb4761cb9b01"
+    },
+    {
+      "path": "scripts/semantic_worker.py",
+      "bytes": 4766,
+      "sha256": "b05a2cd0774d1633c6a312bd147b345c3b76ce3fae90dc3a233a26da6569c0db"
+    },
+    {
+      "path": "scripts/specialist.py",
+      "bytes": 7527,
+      "sha256": "40d8714250033080f33984eedb8478cc15a1fad5dca5635353bd832396a73504"
     },
     {
       "path": "scripts/video_worker.py",
@@ -920,8 +975,8 @@
     },
     {
       "path": "SKILL.md",
-      "bytes": 20478,
-      "sha256": "02009a8251bc74a5328dc7c11ee9cfad264f55184ced7c8c0f06a4f39637eb45"
+      "bytes": 21512,
+      "sha256": "2dc7dafe5dde587b669dabe6e3566e8101346d2d2a34b3f1842839b6f5bfae80"
     },
     {
       "path": "THIRD_PARTY_NOTICES/Crawl4AI-LICENSE.txt",
